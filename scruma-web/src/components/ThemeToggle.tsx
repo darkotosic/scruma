@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from 'react';
 
-export default function ThemeToggle() {
+type ThemeToggleProps = {
+  className?: string;
+  id?: string;
+};
+
+export default function ThemeToggle({ className, id }: ThemeToggleProps) {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -19,5 +24,9 @@ export default function ThemeToggle() {
     document.documentElement.setAttribute('data-theme', next ? 'dark' : 'light');
   };
 
-  return <button onClick={toggle}>{dark ? 'Светла тема' : 'Тамна тема'}</button>;
+  return (
+    <button id={id} className={className} onClick={toggle}>
+      {dark ? 'Светла тема' : 'Тамна тема'}
+    </button>
+  );
 }

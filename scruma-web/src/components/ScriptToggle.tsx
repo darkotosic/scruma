@@ -20,7 +20,12 @@ export const useScriptText = (text: string) => {
   return script === 'latn' ? toLatin(text) : text;
 };
 
-export default function ScriptToggle() {
+type ScriptToggleProps = {
+  className?: string;
+  id?: string;
+};
+
+export default function ScriptToggle({ className, id }: ScriptToggleProps) {
   const [script, setScript] = useState<'cyrl' | 'latn'>('cyrl');
 
   useEffect(() => {
@@ -37,5 +42,9 @@ export default function ScriptToggle() {
     window.dispatchEvent(new Event(SCRIPT_EVENT));
   };
 
-  return <button onClick={toggle}>{script === 'cyrl' ? 'Латиница' : 'Ћирилица'}</button>;
+  return (
+    <button id={id} className={className} onClick={toggle}>
+      {script === 'cyrl' ? 'Латиница' : 'Ћирилица'}
+    </button>
+  );
 }
