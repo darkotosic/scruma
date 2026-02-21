@@ -9,12 +9,12 @@ export type CardItem = {
 };
 
 export const SITE = {
-  name: 'СК Рума',
+  name: 'СЦ Рума',
   city: 'Рума',
   email: 'info@scruma.rs',
-  phone: '+381 22 000 000',
+  phone: '+381 22 478298',
   address: 'Спортски центар Рума, Рума, Србија',
-  mapsUrl: 'https://maps.google.com/?q=Sportski%20centar%20Ruma'
+  mapsUrl: 'https://maps.app.goo.gl/GmM3QdBjekX1d3b27'
 };
 
 export const NAV_LINKS: LinkItem[] = [
