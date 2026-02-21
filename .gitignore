@@ -140,7 +140,6 @@ vite.config.ts.timestamp-*
 
 # Monorepo paths
 scruma-web/.next/
-scruma-web/out/
 scruma-api/.venv/
 scruma-api/__pycache__/
 scruma-api/db.sqlite3
@@ -149,6 +148,3 @@ scruma-api/db.sqlite3
 **/__pycache__/
 *.pyc
 
-# --- cPanel deploy: морамо верзионисати статички export за scruma-web ---
-!scruma-web/out/
-!scruma-web/out/**
