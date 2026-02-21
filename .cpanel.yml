@@ -5,4 +5,4 @@ deployment:
     - export SOURCEPATH=/home/YOURCPANELUSER/repositories/scruma/scruma-web/out/
     - if [ ! -d "$SOURCEPATH" ]; then echo "SOURCEPATH ne postoji: $SOURCEPATH" && exit 1; fi
     - if [ ! -f "$SOURCEPATH/index.html" ]; then echo "Nema index.html u out/ — prekidam deploy" && exit 1; fi
-    - /usr/bin/rsync -a "$SOURCEPATH" "$DEPLOYPATH"
+    - /usr/bin/rsync -a --delete "$SOURCEPATH" "$DEPLOYPATH"
