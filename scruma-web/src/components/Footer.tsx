@@ -10,7 +10,7 @@ export default function Footer() {
       <Container>
         <div className="footerInner">
           <div>
-            © {new Date().getFullYear()} {useScriptText('СК Рума')} —{' '}
+            © {new Date().getFullYear()} {useScriptText('СЦ Рума')} —{' '}
             {useScriptText('Званична интернет презентација')}
           </div>
           <div>
