@@ -3,6 +3,6 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/digita28/public_html/
     - export SOURCEPATH=/home/digita28/repositories/scruma/scruma-web/out/
-    - if [ ! -d "$SOURCEPATH" ]; then echo "SOURCEPATH ne postoji: $SOURCEPATH" && exit 1; fi
-    - if [ ! -f "$SOURCEPATH/index.html" ]; then echo "Nema index.html u out/ — prekidam deploy" && exit 1; fi
-    - /bin/cp -R "$SOURCEPATH"* "$DEPLOYPATH"
+    - if [ ! -d "$SOURCEPATH" ]; then echo "SOURCEPATH ne postoji" && exit 1; fi
+    - if [ ! -f "$SOURCEPATH/index.html" ]; then echo "index.html ne postoji u out" && exit 1; fi
+    - /usr/bin/rsync -a --delete "$SOURCEPATH" "$DEPLOYPATH"
