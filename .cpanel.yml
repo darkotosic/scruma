@@ -1,13 +1,8 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/digita28/public_html/
-
-    # 1) Не дирај .well-known (SSL), обриши све остало на 1. нивоу
-    - /usr/bin/find "$DEPLOYPATH" -mindepth 1 -maxdepth 1 ! -name ".well-known" -exec /bin/rm -rf {} \;
-
-    # 2) Увери се да циљ постоји
-    - /bin/mkdir -p "$DEPLOYPATH"
-
-    # 3) Копирај статички export (мора бити commit-ован у репо!)
-    - /bin/cp -R scruma-web/out/* "$DEPLOYPATH"
+    - export DEPLOYPATH=/home/YOURCPANELUSER/public_html/
+    - export SOURCEPATH=/home/YOURCPANELUSER/repositories/scruma/scruma-web/out/
+    - if [ ! -d "$SOURCEPATH" ]; then echo "SOURCEPATH ne postoji: $SOURCEPATH" && exit 1; fi
+    - if [ ! -f "$SOURCEPATH/index.html" ]; then echo "Nema index.html u out/ — prekidam deploy" && exit 1; fi
+    - /usr/bin/rsync -a "$SOURCEPATH" "$DEPLOYPATH"
