@@ -1,48 +1,32 @@
-# AGENTS.md — Project Operating Rules (Codex / ChatGPT)
+# AGENTS.md — Project Operating Rules
 
-This repository contains a static website (Next.js static export) deployed to cPanel/WebDream. A separate Django API + Admin runs on Render. Follow these rules strictly.
+## Language & Script Requirements
+- Default user-facing content must be **Serbian Cyrillic**.
+- Provide a **Cyrillic/Latin toggle** for UI.
+- Do not introduce English in the UI unless explicitly requested.
 
-## Language & Script Rules (Non-negotiable)
-- Default content language: Serbian.
-- Default script: Cyrillic (sr-Cyrl) for ALL UI/UX text.
-- The UI must provide a visible toggle to switch to Latin (sr-Latn).
-- Never introduce English UI strings in the product UI (docs are allowed).
+## Monorepo Layout
+- `scruma-web/` = Next.js static site (export to `out/`)
+- `scruma-api/` = Django API + Admin for content management
+- Root `.cpanel.yml` deploys `scruma-web/out/` to WebDream `public_html`.
 
-## Product Scope
-- Static website: 4–6 pages, modern UI, responsive, fast.
-- Light/Dark theme toggle.
-- Data comes from Django Admin via Django API.
-- Every page must work without the API (static fallback content).
-- The API integration must be additive (no hard dependency).
+## Deployment Targets
+- WebDream/cPanel: static files only (no Node runtime required).
+- Render: Django web service (Root Directory `scruma-api`).
 
-## Technical Constraints (cPanel/WebDream)
-- The site must be deployable via cPanel Git Version Control.
-- `.cpanel.yml` must exist at repository root and be committed.
-- Deployment target: `public_html/` (or a configured custom path).
-- Avoid dangerous deployment patterns (do not copy `.git` or use broad wildcards).
+## Content Strategy
+- Every page must have:
+  1) a static fallback (rendered without API),
+  2) optional dynamic enhancement via API.
 
-## Architecture Guidelines
-- Use Next.js in a static-export compatible configuration.
-- Keep runtime API calls optional and resilient (timeouts, graceful fallback).
-- Centralize API base URL configuration (ENV or a single config module).
-- Keep content models simple: news/announcements/events/matches.
+## Coding Standards
+- Keep changes minimal and reversible.
+- Prefer configuration over complexity.
+- Add clear comments only where non-obvious.
+- Avoid breaking existing routes and deployment assumptions.
 
-## Quality Bar
-- No regressions: preserve existing behavior unless explicitly instructed.
-- Accessibility: semantic HTML, proper contrast, keyboard focus.
-- Performance: minimal JS, optimized assets, avoid heavy dependencies.
-- Security: sanitize any HTML coming from the API; never trust input.
-
-## Deliverable Conventions
-When implementing changes:
-- Provide exact file paths.
-- Provide complete file contents for new files.
-- Provide minimal diffs for edits.
-- Keep commits logically grouped (docs, config, UI, API integration).
-
-## Definition of Done (MVP)
-- Pages exist and render in Cyrillic by default.
-- Latin toggle works across all pages.
-- Light/Dark toggle works across all pages.
-- Static export produces `out/`.
-- `.cpanel.yml` deploys `out/` into `public_html/`.
+## Acceptance Criteria
+- `scruma-web/out/` contains a fully working static site.
+- `.cpanel.yml` successfully deploys to `public_html`.
+- Render deploys `scruma-api` with migrations + static collection.
+- Admin can manage: announcements, match previews, and page content.

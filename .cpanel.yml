@@ -3,4 +3,5 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/digita28/public_html/
     - /bin/rm -rf $DEPLOYPATH/*
-    - /bin/cp -R out/* $DEPLOYPATH
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp -R scruma-web/out/* $DEPLOYPATH
