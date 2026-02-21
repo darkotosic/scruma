@@ -38,7 +38,7 @@ export default function Header() {
           </nav>
 
           <div className="nav-actions">
-            <ScriptToggle className="glass-btn" />
+            <ScriptToggle className="glass-btn" id="langToggle" />
             <ThemeToggle className="glass-btn" id="themeToggle" />
           </div>
         </div>
