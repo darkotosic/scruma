@@ -1,22 +1,30 @@
 'use client';
 
-import { useScriptText } from '@/components/ScriptToggle';
-
-const fallbackNews = [
-  'Почињу припреме за пролећни део сезоне.',
-  'Објављен је распоред тренинга за млађе категорије.',
-  'Клуб позива волонтере за организацију догађаја.'
-];
+import Container from '@/components/Container';
+import Hero from '@/components/Hero';
+import SectionHeader from '@/components/SectionHeader';
+import CardGrid from '@/components/CardGrid';
+import { HOME } from '@/lib/content';
 
 export default function NewsPage() {
   return (
-    <section>
-      <h1>{useScriptText('Вести')}</h1>
-      <ul>
-        {fallbackNews.map((item) => (
-          <li key={item}>{useScriptText(item)}</li>
-        ))}
-      </ul>
-    </section>
+    <>
+      <Hero
+        title="Вести"
+        subtitle="Најновија дешавања у Спортском центру."
+        image="/images/placeholders/news-hero.jpg"
+        ctas={[
+          { title: 'Почетна', href: '/' },
+          { title: 'Контакт', href: '/kontakt' }
+        ]}
+      />
+
+      <section className="pageSection">
+        <Container>
+          <SectionHeader title="Све вести" subtitle="Статички fallback — касније Django API v1." />
+          <CardGrid items={HOME.vesti} />
+        </Container>
+      </section>
+    </>
   );
 }

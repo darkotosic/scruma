@@ -3,27 +3,28 @@
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
 import ScriptToggle, { useScriptText } from './ScriptToggle';
+import Container from './Container';
+import { NAV_LINKS } from '@/lib/content';
 
 export default function Header() {
-  const home = useScriptText('Почетна');
-  const about = useScriptText('О нама');
-  const news = useScriptText('Вести');
-  const events = useScriptText('Догађаји');
-  const contact = useScriptText('Контакт');
-
   return (
     <header>
-      <nav>
-        <Link href="/">{home}</Link>
-        <Link href="/o-nama">{about}</Link>
-        <Link href="/vesti">{news}</Link>
-        <Link href="/dogadjaji">{events}</Link>
-        <Link href="/kontakt">{contact}</Link>
-      </nav>
-      <div className="toggles">
-        <ScriptToggle />
-        <ThemeToggle />
-      </div>
+      <Container>
+        <div className="headerInner">
+          <nav aria-label={useScriptText('Главна навигација')}>
+            {NAV_LINKS.map((l) => (
+              <Link key={l.href} className="navLink" href={l.href}>
+                {useScriptText(l.title)}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="toggles">
+            <ScriptToggle />
+            <ThemeToggle />
+          </div>
+        </div>
+      </Container>
     </header>
   );
 }

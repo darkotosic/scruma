@@ -4,7 +4,12 @@ import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'СК Рума',
-  description: 'Интернет презентација СК Рума'
+  description: 'Званична интернет презентација Спортског центра Рума.',
+  openGraph: {
+    title: 'СК Рума',
+    description: 'Званична интернет презентација Спортског центра Рума.',
+    type: 'website'
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,22 +1,33 @@
 'use client';
 
-import { useScriptText } from '@/components/ScriptToggle';
-
-const fallbackEvents = [
-  'Недеља 17:00 — Припремна утакмица на домаћем терену.',
-  'Среда 19:30 — Хуманитарни спортски турнир.',
-  'Петак 18:00 — Отворени тренинг за децу.'
-];
+import Container from '@/components/Container';
+import Hero from '@/components/Hero';
+import SectionHeader from '@/components/SectionHeader';
+import CardGrid from '@/components/CardGrid';
+import { HOME } from '@/lib/content';
 
 export default function EventsPage() {
   return (
-    <section>
-      <h1>{useScriptText('Догађаји')}</h1>
-      <ul>
-        {fallbackEvents.map((event) => (
-          <li key={event}>{useScriptText(event)}</li>
-        ))}
-      </ul>
-    </section>
+    <>
+      <Hero
+        title="Дешавања"
+        subtitle="Догађаји, турнири и активности — најаве."
+        image="/images/placeholders/events-hero.jpg"
+        ctas={[
+          { title: 'Почетна', href: '/' },
+          { title: 'Контакт', href: '/kontakt' }
+        ]}
+      />
+
+      <section className="pageSection">
+        <Container>
+          <SectionHeader
+            title="Сва дешавања"
+            subtitle="Статички fallback — касније Django API v1."
+          />
+          <CardGrid items={HOME.desavanja} />
+        </Container>
+      </section>
+    </>
   );
 }
