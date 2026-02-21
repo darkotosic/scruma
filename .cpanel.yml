@@ -2,6 +2,12 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/digita28/public_html/
-    - /bin/rm -rf $DEPLOYPATH/*
-    - /bin/mkdir -p $DEPLOYPATH
-    - /bin/cp -R scruma-web/out/* $DEPLOYPATH
+
+    # 1) Не дирај .well-known (SSL), обриши све остало на 1. нивоу
+    - /usr/bin/find "$DEPLOYPATH" -mindepth 1 -maxdepth 1 ! -name ".well-known" -exec /bin/rm -rf {} \;
+
+    # 2) Увери се да циљ постоји
+    - /bin/mkdir -p "$DEPLOYPATH"
+
+    # 3) Копирај статички export (мора бити commit-ован у репо!)
+    - /bin/cp -R scruma-web/out/* "$DEPLOYPATH"

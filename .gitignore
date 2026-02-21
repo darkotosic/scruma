@@ -148,3 +148,7 @@ scruma-api/db.sqlite3
 # Python cache
 **/__pycache__/
 *.pyc
+
+# --- cPanel deploy: морамо верзионисати статички export за scruma-web ---
+!scruma-web/out/
+!scruma-web/out/**
