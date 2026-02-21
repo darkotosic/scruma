@@ -1,90 +1,44 @@
-# СК Рума — интернет презентација (статички Next.js) + Django API
+# СЦ Рума — интернет презентација (монорепо)
 
-Овај репо садржи **статички веб сајт** (4–6 страница) изграђен у **Next.js** и деплојован на **WebDream/cPanel** (у `public_html`) преко **cPanel Git Version Control**.
+Овај репозиторијум садржи:
+- **scruma-web/** — статички сајт (Next.js export), деплој на **WebDream/cPanel** у `public_html`
+- **scruma-api/** — **Django API + Django Admin**, деплој на **Render**
 
-Садржај (најаве утакмица, обавештења, вести, догађаји) се уноси преко **Django Admin-а** на Render-у, преко **Django API**-ја.  
-Свака страница има **статички fallback** (садржај из репоа) + опционално “преписивање”/допуну садржаја из API-ја.
+## Језик и писмо
+- Комплетан UI/UX је подразумевано на **ћирилици**
+- Постоји прекидач за **латиницу**
+- Све странице морају имати **статички fallback** (садржај видљив и без API-ја)
 
----
+## Странице (планирано 4–6)
+- Почетна
+- О нама / Спортски центар
+- Најаве утакмица
+- Обавештења
+- Контакт
+- (опционо) Галерија
 
-## Кључни захтеви (обвезно)
+## Деплој — WebDream (scruma-web)
+1. `scruma-web` се гради у `scruma-web/out/`
+2. cPanel Git Deployment копира `scruma-web/out/*` у `public_html` преко `.cpanel.yml`
 
-1. **Подразумевани језик је српски (ћирилица)**.
-2. UI/UX мора бити **у потпуности на ћирилици**.
-3. Мора постојати опција **пребацивања на латиницу** (тогл у хедеру).
-4. Модеран CSS са **light/dark темама** (тогл у хедеру).
-5. Frontend је **статички (Next.js export)** и мора радити без API-ја (fallback).
-6. Django API је на Render-у (одвојен сервис/репо). Овај репо само конзумира API.
+## Деплој — Render (scruma-api)
+- Render Web Service користи Root Directory: `scruma-api`
+- Build:
+  - `pip install -r requirements.txt`
+  - `python manage.py collectstatic --noinput`
+  - `python manage.py migrate`
+- Start:
+  - `gunicorn config.wsgi:application`
 
----
+## Локални развој (опционо)
+### scruma-web
+- `cd scruma-web`
+- `npm i`
+- `npm run build && npm run export`
 
-## Странице (иницијални сет)
-
-- `/` Почетна
-- `/o-nama` О нама
-- `/vesti` Вести / обавештења
-- `/dogadjaji` Догађаји / утакмице (најаве)
-- `/kontakt` Контакт
-- `/api-health` Тест везе ка API-ју (опционо, само за дијагностику)
-
----
-
-## Техничка архитектура (high-level)
-
-- **Next.js**: статичка генерација (export) за cPanel хостинг.
-- **Теме**: light/dark (CSS променљиве).
-- **Писмо**: ћирилица као default + тогл за латиницу (транслитерација у UI слоју).
-- **Подаци**:
-  - Fallback: статички JSON/константе у репоу (или MD/TS објекти).
-  - Runtime: fetch ка Django API (CORS дозвољен за домен).
-
----
-
-## Подешавање локалног развоја
-
-### 1) Инсталација
-```bash
-npm ci
-2) Дев режим
-npm run dev
-3) Production build + export
-npm run build
-npm run export
-
-Резултат статичког сајта је у директоријуму out/.
-
-Деплој на WebDream/cPanel (Git Version Control)
-
-Овај репо користи .cpanel.yml у root-у да би cPanel могао да деплојује у public_html.
-
-Кључно:
-
-.cpanel.yml мора бити commit-ован у root-у.
-
-Деплој копира out/ у public_html/ (clean + copy).
-
-Избегавати wildcard који би могао копирати .git и направити проблеме.
-
-Варијанта инфраструктуре
-
-WebDream/cPanel: статички Next.js export (овде).
-
-Render: Django Admin + Django API (одвојен репо/сервис).
-
-Роадмап (MVP → V1)
-
-MVP: 4–6 страница, теме, ћирилица/латиница тогл, fallback садржај.
-
-V1: интеграција Django API: вести, обавештења, најаве утакмица, догађаји, “издвојено”.
-
-V2: SEO, sitemap, OpenGraph, кеширање, basic analytics.
-
-Контакт / одржавање
-
-Ово је службени пројекат за јавну презентацију. Сваки PR мора поштовати:
-
-ћирилицу као default
-
-zero-regression принцип (без кварења постојећег UI/UX)
-
-сигурносне и перформансне мере за статички хостинг
+### scruma-api
+- `cd scruma-api`
+- `python -m venv .venv`
+- `pip install -r requirements.txt`
+- `python manage.py migrate`
+- `python manage.py runserver`

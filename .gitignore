@@ -137,3 +137,14 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Monorepo paths
+scruma-web/.next/
+scruma-web/out/
+scruma-api/.venv/
+scruma-api/__pycache__/
+scruma-api/db.sqlite3
+
+# Python cache
+**/__pycache__/
+*.pyc
