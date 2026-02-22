@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SiteFavicon from "@/components/SiteFavicon";
 import ClientProviders from "@/context/ClientProviders";
+import BackToTopButton from "@/components/BackToTopButton";
 
 export const metadata: Metadata = {
   title: "СЦ Рума",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <main>{children}</main>
           <Footer />
+          <BackToTopButton />
         </ClientProviders>
       </body>
     </html>
