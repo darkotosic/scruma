@@ -1,6 +1,29 @@
 ---
 deployment:
   tasks:
-    - echo "CPANEL TASK START $(date)" > /home/digita28/public_html/cpanel-test.txt
-    - /usr/bin/rsync -a --delete /home/digita28/repositories/scruma/scruma-web/out/ /home/digita28/public_html/
-    - echo "DEPLOY DONE $(date)" > /home/digita28/public_html/deploy.txt
+    - export DEPLOYPATH=/home/digita28/public_html
+    - export REPOPATH=$(pwd)
+    - export WEBPATH="$REPOPATH/scruma-web"
+    - export OUTPATH="$WEBPATH/out"
+
+    - echo "CPANEL_TASK_START $(date)" > "$DEPLOYPATH/cpanel-test.txt"
+    - echo "REPOPATH=$REPOPATH" >> "$DEPLOYPATH/cpanel-test.txt"
+    - echo "WEBPATH=$WEBPATH" >> "$DEPLOYPATH/cpanel-test.txt"
+
+    # 1) Build + export
+    - cd "$WEBPATH"
+    - /usr/bin/node -v >> "$DEPLOYPATH/cpanel-test.txt" || true
+    - /usr/bin/npm -v >> "$DEPLOYPATH/cpanel-test.txt" || true
+    - /usr/bin/npm ci
+    - /usr/bin/npm run build
+    - /usr/bin/npm run export
+
+    # 2) Safety checks
+    - if [ ! -d "$OUTPATH" ]; then echo "OUTPATH не постоји: $OUTPATH" >> "$DEPLOYPATH/cpanel-test.txt" && exit 1; fi
+    - if [ ! -f "$OUTPATH/index.html" ]; then echo "index.html не постоји у: $OUTPATH" >> "$DEPLOYPATH/cpanel-test.txt" && exit 1; fi
+
+    # 3) Deploy: copy CONTENTS of out/ -> public_html (keep .well-known)
+    - /usr/bin/rsync -a --delete --exclude ".well-known" "$OUTPATH/" "$DEPLOYPATH/"
+
+    # 4) Mark deploy
+    - echo "DEPLOY_OK $(date)" > "$DEPLOYPATH/deploy.txt"
