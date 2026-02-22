@@ -1,39 +1,104 @@
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://scruma-api.onrender.com";
+import { apiGetJson } from "./apiClient";
 
-export const getApiBaseUrl = () => API_BASE_URL;
+const BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const fetchApiHealth = async (): Promise<{ ok: boolean; message: string }> => {
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 3000);
-    const response = await fetch(`${API_BASE_URL}/api/health/`, { signal: controller.signal });
-    clearTimeout(timeout);
+if (!BASE) {
+  throw new Error("NEXT_PUBLIC_API_BASE_URL није подешен.");
+}
 
-    if (!response.ok) return { ok: false, message: "API је доступан, али враћа грешку." };
+export const getApiBaseUrl = () => BASE;
 
-    return { ok: true, message: "API је доступан." };
-  } catch {
-    return { ok: false, message: "API није доступан." };
-  }
+export type SiteResponse = {
+  settings: {
+    site_name?: string;
+    logo?: string;
+    favicon?: string;
+    hero_title?: string;
+    hero_subtitle?: string;
+    hero_image?: string;
+    maps_embed_url?: string;
+    footer_text?: string;
+    footer_logo?: string;
+    footer_bottom_text?: string;
+    footer_columns?: { title: string; links: { label: string; url: string }[] }[];
+  } | null;
 };
 
-export async function fetchJson<T>(path: string): Promise<T> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 3500);
+export type NavResponse = { items: { href: string; label: string }[] };
 
-  try {
-    const response = await fetch(`${API_BASE_URL}${path}`, {
-      signal: controller.signal,
-      cache: "no-store",
-    });
+export type PageResponse = {
+  page: {
+    slug: string;
+    title: string;
+    subtitle: string;
+    body: string;
+    body_html?: string;
+    hero_image: string;
+    seo_title: string;
+    seo_description: string;
+    updated_at: string;
+  } | null;
+  missing?: boolean;
+  slug?: string;
+};
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
+export type PostsResponse = {
+  items: {
+    id: string;
+    type: string;
+    title: string;
+    excerpt?: string;
+    body?: string;
+    body_html?: string;
+    image?: string;
+    published_at?: string;
+  }[];
+};
 
-    return (await response.json()) as T;
-  } finally {
-    clearTimeout(timeout);
-  }
+export type PostResponse = {
+  id: string;
+  type: string;
+  title: string;
+  excerpt?: string;
+  body?: string;
+  body_html?: string;
+  image?: string;
+  published_at?: string;
+};
+
+export function fetchApiHealth() {
+  return apiGetJson<{ status: string; service?: string; time?: string }>(`${BASE}/health/`, {
+    timeoutMs: 3000,
+    retries: 1,
+  });
+}
+
+export function fetchSite() {
+  return apiGetJson<SiteResponse>(`${BASE}/api/v1/site/`);
+}
+
+export function fetchNav() {
+  return apiGetJson<NavResponse>(`${BASE}/api/v1/nav/`);
+}
+
+export function fetchPage(slug: string) {
+  return apiGetJson<PageResponse>(`${BASE}/api/v1/pages/${slug.replace(/^\/+|\/+$/g, "")}/`);
+}
+
+export function fetchPosts(params: { type?: string; limit?: number }) {
+  const q = new URLSearchParams();
+  if (params.type) q.set("type", params.type);
+  if (params.limit) q.set("limit", String(params.limit));
+  const qs = q.toString();
+  return apiGetJson<PostsResponse>(`${BASE}/api/v1/posts/${qs ? `?${qs}` : ""}`);
+}
+
+export function fetchPostById(id: string) {
+  return apiGetJson<PostResponse>(`${BASE}/api/v1/posts/${id}/`);
+}
+
+export function fetchAnnouncements() {
+  return apiGetJson<{ items: { id: string; title: string; body: string; created_at?: string }[] }>(
+    `${BASE}/api/v1/announcements/`
+  );
 }

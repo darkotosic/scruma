@@ -1,5 +1,5 @@
 import CmsPage from "@/components/CmsPage";
 
 export default function Page() {
-  return <CmsPage slug="teretana" fallbackTitle="Теретана" />;
+  return <CmsPage slug="teretana" />;
 }

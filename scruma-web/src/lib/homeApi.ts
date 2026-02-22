@@ -1,4 +1,4 @@
-import { fetchJson } from "./api";
+import { fetchAnnouncements, fetchPosts, fetchSite } from "./api";
 
 export type V1HomeResponse = {
   settings: any | null;
@@ -7,5 +7,15 @@ export type V1HomeResponse = {
 };
 
 export async function fetchHome(): Promise<V1HomeResponse> {
-  return fetchJson<V1HomeResponse>("/api/v1/home/");
+  const [site, announcements, posts] = await Promise.all([
+    fetchSite(),
+    fetchAnnouncements(),
+    fetchPosts({}),
+  ]);
+
+  return {
+    settings: site.settings,
+    announcements: announcements.items,
+    posts: posts.items,
+  };
 }

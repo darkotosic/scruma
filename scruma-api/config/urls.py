@@ -3,10 +3,11 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.static import serve
 
-from core.views import HomeStatusView
+from core.views import HealthView, HomeStatusView
 
 urlpatterns = [
     path("", HomeStatusView.as_view()),
+    path("health/", HealthView.as_view(), name="health"),
     path("admin/", admin.site.urls),
     path("api/", include("core.urls")),
 ]
