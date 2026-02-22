@@ -1,9 +1,16 @@
-import { apiGetJson } from "./apiClient";
-import { API_BASE_URL } from "@/config/api";
+// scruma-web/src/lib/api.ts
 
-const BASE = API_BASE_URL;
+export const API_BASE_URL = (() => {
+  const raw =
+    process.env.NEXT_PUBLIC_API_BASE_URL?.trim() ||
+    "https://scruma-api.onrender.com";
 
-export const getApiBaseUrl = () => BASE;
+  return raw.replace(/\/+$/, "");
+})();
+
+export const getApiBaseUrl = () => API_BASE_URL;
+
+type Json = any;
 
 export type SiteResponse = {
   settings: {
@@ -64,39 +71,56 @@ export type PostResponse = {
   published_at?: string;
 };
 
-export function fetchApiHealth() {
-  return apiGetJson<{ status: string; service?: string; time?: string }>(`${BASE}/health/`, {
-    timeoutMs: 3000,
-    retries: 1,
+async function fetchJson<T = Json>(path: string, init?: RequestInit): Promise<T> {
+  const url = `${API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+
+  const res = await fetch(url, {
+    ...init,
+    headers: {
+      Accept: "application/json",
+      ...(init?.headers || {}),
+    },
+    cache: "no-store",
   });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`API ${res.status} ${res.statusText}: ${text || url}`);
+  }
+
+  return (await res.json()) as T;
+}
+
+export function fetchApiHealth() {
+  return fetchJson<{ status: string; service?: string; time?: string }>("/health/");
 }
 
 export function fetchSite() {
-  return apiGetJson<SiteResponse>(`${BASE}/api/v1/site/`);
+  return fetchJson<SiteResponse>("/api/v1/site/");
 }
 
 export function fetchNav() {
-  return apiGetJson<NavResponse>(`${BASE}/api/v1/nav/`);
+  return fetchJson<NavResponse>("/api/v1/nav/");
 }
 
 export function fetchPage(slug: string) {
-  return apiGetJson<PageResponse>(`${BASE}/api/v1/pages/${slug.replace(/^\/+|\/+$/g, "")}/`);
+  return fetchJson<PageResponse>(`/api/v1/pages/${slug.replace(/^\/+|\/+$/g, "")}/`);
 }
 
 export function fetchPosts(params: { type?: string; limit?: number }) {
-  const q = new URLSearchParams();
-  if (params.type) q.set("type", params.type);
-  if (params.limit) q.set("limit", String(params.limit));
-  const qs = q.toString();
-  return apiGetJson<PostsResponse>(`${BASE}/api/v1/posts/${qs ? `?${qs}` : ""}`);
+  const qs = new URLSearchParams();
+  if (params.type) qs.set("type", params.type);
+  if (params.limit) qs.set("limit", String(params.limit));
+  const suffix = qs.toString() ? `?${qs.toString()}` : "";
+  return fetchJson<PostsResponse>(`/api/v1/posts/${suffix}`);
 }
 
 export function fetchPostById(id: string) {
-  return apiGetJson<PostResponse>(`${BASE}/api/v1/posts/${id}/`);
+  return fetchJson<PostResponse>(`/api/v1/posts/${id}/`);
 }
 
 export function fetchAnnouncements() {
-  return apiGetJson<{ items: { id: string; title: string; body: string; created_at?: string }[] }>(
-    `${BASE}/api/v1/announcements/`
+  return fetchJson<{ items: { id: string; title: string; body: string; created_at?: string }[] }>(
+    "/api/v1/announcements/"
   );
 }
