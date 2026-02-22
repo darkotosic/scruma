@@ -1,24 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { toLatin } from '@/lib/translit';
-
-const SCRIPT_EVENT = 'script-change';
-
-const readScript = () => (typeof window !== 'undefined' ? (localStorage.getItem('script') ?? 'cyrl') : 'cyrl');
-
-export const useScriptText = (text: string) => {
-  const [script, setScript] = useState<'cyrl' | 'latn'>('cyrl');
-
-  useEffect(() => {
-    const apply = () => setScript(readScript() === 'latn' ? 'latn' : 'cyrl');
-    apply();
-    window.addEventListener(SCRIPT_EVENT, apply);
-    return () => window.removeEventListener(SCRIPT_EVENT, apply);
-  }, []);
-
-  return script === 'latn' ? toLatin(text) : text;
-};
+import { useEffect } from "react";
+import { useScript } from "@/context/ScriptContext";
 
 type ScriptToggleProps = {
   className?: string;
@@ -26,25 +9,20 @@ type ScriptToggleProps = {
 };
 
 export default function ScriptToggle({ className, id }: ScriptToggleProps) {
-  const [script, setScript] = useState<'cyrl' | 'latn'>('cyrl');
+  const { script, setScript } = useScript();
 
   useEffect(() => {
-    const current = readScript() === 'latn' ? 'latn' : 'cyrl';
-    setScript(current);
-    document.documentElement.setAttribute('data-script', current);
-  }, []);
+    document.documentElement.setAttribute("data-script", script);
+  }, [script]);
 
   const toggle = () => {
-    const next = script === 'cyrl' ? 'latn' : 'cyrl';
+    const next = script === "cyrl" ? "latn" : "cyrl";
     setScript(next);
-    localStorage.setItem('script', next);
-    document.documentElement.setAttribute('data-script', next);
-    window.dispatchEvent(new Event(SCRIPT_EVENT));
   };
 
   return (
     <button id={id} className={className} onClick={toggle}>
-      {script === 'cyrl' ? 'Латиница' : 'Ћирилица'}
+      {script === "cyrl" ? "Латиница" : "Ћирилица"}
     </button>
   );
 }

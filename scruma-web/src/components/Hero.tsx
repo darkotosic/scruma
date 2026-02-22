@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useScriptText } from '@/components/ScriptToggle';
+import { useScript } from '@/context/ScriptContext';
 import Container from './Container';
 
 type Cta = { title: string; href: string };
@@ -17,19 +17,20 @@ export default function Hero({
   image: string;
   ctas: Cta[];
 }) {
+  const { t } = useScript();
   return (
-    <section className="hero" aria-label={useScriptText('Херо секција')}>
+    <section className="hero" aria-label={t('Херо секција')}>
       <div className="heroMedia" style={{ backgroundImage: `url(${image})` }} />
       <div className="heroOverlay" />
       <Container>
         <div className="heroContent">
-          <h1 className="heroTitle">{useScriptText(title)}</h1>
-          <p className="heroSubtitle">{useScriptText(subtitle)}</p>
+          <h1 className="heroTitle">{t(title)}</h1>
+          <p className="heroSubtitle">{t(subtitle)}</p>
 
           <div className="heroCtas">
             {ctas.map((c) => (
               <Link key={c.href} className="btn btnPrimary" href={c.href}>
-                {useScriptText(c.title)}
+                {t(c.title)}
               </Link>
             ))}
           </div>

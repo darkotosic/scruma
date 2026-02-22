@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useScriptText } from '@/components/ScriptToggle';
+import { useScript } from '@/context/ScriptContext';
 
 export default function Accordion({
   items
 }: {
   items: { title: string; content: string }[];
 }) {
+  const { t } = useScript();
   const [open, setOpen] = useState<number>(0);
 
   return (
@@ -21,10 +22,10 @@ export default function Accordion({
               onClick={() => setOpen(isOpen ? -1 : idx)}
               aria-expanded={isOpen}
             >
-              <span>{useScriptText(it.title)}</span>
+              <span>{t(it.title)}</span>
               <span className="accIcon">{isOpen ? '−' : '+'}</span>
             </button>
-            {isOpen ? <div className="accPanel">{useScriptText(it.content)}</div> : null}
+            {isOpen ? <div className="accPanel">{t(it.content)}</div> : null}
           </div>
         );
       })}

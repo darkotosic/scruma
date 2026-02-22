@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useScriptText } from '@/components/ScriptToggle';
+import { useScript } from '@/context/ScriptContext';
 import { fetchApiHealth, getApiBaseUrl } from '@/lib/api';
 
 export default function ApiHealthPage() {
+  const { t } = useScript();
   const [status, setStatus] = useState('Провера API везе је у току...');
 
   useEffect(() => {
@@ -15,9 +16,9 @@ export default function ApiHealthPage() {
 
   return (
     <section>
-      <h1>{useScriptText('API дијагностика')}</h1>
-      <p>{useScriptText('Базни URL:')} {getApiBaseUrl()}</p>
-      <p>{useScriptText(status)}</p>
+      <h1>{t('API дијагностика')}</h1>
+      <p>{t('Базни URL:')} {getApiBaseUrl()}</p>
+      <p>{t(status)}</p>
     </section>
   );
 }
