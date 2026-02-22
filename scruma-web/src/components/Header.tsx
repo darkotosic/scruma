@@ -5,18 +5,26 @@ import Link from "next/link";
 import ScriptToggle from "./ScriptToggle";
 import { useScript } from "@/context/ScriptContext";
 import ThemeToggle from "./ThemeToggle";
-import { fetchNav, fetchSiteSettings } from "@/lib/api";
+import { fetchSiteSettings } from "@/lib/api";
 import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
 
-type NavItem = { href: string; label: string };
 
 export default function Header() {
   const { t } = useScript();
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [navItems, setNavItems] = useState<NavItem[] | null>(null);
-  const [navError, setNavError] = useState(false);
+  const navItems = [
+    { href: "/", label: "Насловна" },
+    { href: "/velika-sala", label: "Велика сала (спортска хала)" },
+    { href: "/sale", label: "Сале" },
+    { href: "/kuglana", label: "Куглана" },
+    { href: "/teretana", label: "Теретана" },
+    { href: "/bazen-borkovac", label: "Базен Борковац" },
+    { href: "/galerija", label: "Галерија" },
+    { href: "/o-nama", label: "О нама" },
+    { href: "/kontakt", label: "Контакт" },
+  ];
 
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [siteError, setSiteError] = useState(false);
@@ -33,16 +41,13 @@ export default function Header() {
 
     (async () => {
       try {
-        const [nav, site] = await Promise.all([fetchNav(), fetchSiteSettings()]);
+        const site = await fetchSiteSettings();
         if (!alive) return;
 
-        setNavItems(nav.items || []);
         setLogoUrl(site.logo || null);
       } catch {
         if (!alive) return;
-        setNavError(true);
         setSiteError(true);
-        setNavItems([]);
         setLogoUrl(null);
       }
     })();
@@ -78,17 +83,15 @@ export default function Header() {
           </Link>
 
           <nav className="nav-links" aria-label={t("Главна навигација")}>
-            {navItems === null
-              ? [1, 2, 3, 4].map((i) => <SkeletonBlock key={i} className="h-6 w-20" />)
-              : navItems.map((item) => (
-                  <Link key={item.href} href={item.href}>
-                    {t(item.label)}
-                  </Link>
-                ))}
+            {navItems.map((item) => (
+              <Link key={item.href} href={item.href}>
+                {t(item.label)}
+              </Link>
+            ))}
           </nav>
 
           <div className="nav-actions">
-            {process.env.NODE_ENV !== "production" && (navError || siteError) ? (
+            {process.env.NODE_ENV !== "production" && siteError ? (
               <span className="rounded-md border border-amber-500/50 px-2 py-1 text-xs">
                 API грешка (nav/site)
               </span>
@@ -134,7 +137,7 @@ export default function Header() {
           </div>
 
           <nav className="nav-mobile-links" aria-label={t("Навигација")}>
-            {(navItems || []).map((item) => (
+            {navItems.map((item) => (
               <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
                 {t(item.label)}
               </Link>

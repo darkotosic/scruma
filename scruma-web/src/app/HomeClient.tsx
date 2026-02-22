@@ -22,11 +22,6 @@ function mapPostsToCards(posts: any[], hrefBuilder: (item: any) => string) {
 export default function HomeClient() {
   const [data, setData] = useState<any | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const [kakoDoNas, setKakoDoNas] = useState<{ address: string; mapUrl: string }>({
-    address: "Veljka Dugoševića 100, Ruma",
-    mapUrl: "",
-  });
-
   async function load() {
     setErr(null);
     try {
@@ -37,11 +32,6 @@ export default function HomeClient() {
         fetchPosts({ type: "sport", limit: 6 }),
       ]);
       setData({ site, announcements, news, sport });
-      const settings = site?.settings;
-      setKakoDoNas({
-        address: settings?.address || "Veljka Dugoševića 100, Ruma",
-        mapUrl: settings?.maps_embed_url || "",
-      });
     } catch (e: any) {
       const message = typeof e?.message === "string" ? e.message : "Неуспешно учитавање података са API-ја.";
       const status = typeof e?.status === "number" ? `Код: ${e.status}` : "";
@@ -109,31 +99,12 @@ export default function HomeClient() {
         <Container>
           <SectionHeader title="Како до нас" subtitle="Локација и приступ спортском центру." />
 
-          <div className="mt-6 grid gap-6 md:grid-cols-2">
-            <div className="rounded-2xl border border-black/10 p-5 dark:border-white/10">
-              <div className="text-sm opacity-70">Адреса</div>
-              <div className="mt-2 text-lg font-semibold">{kakoDoNas.address}</div>
-              <div className="mt-4 text-sm opacity-80">
-                Мапа се учитава директно из административног панела (један извор истине).
-              </div>
-            </div>
-
-            <div className="overflow-hidden rounded-2xl border border-black/10 dark:border-white/10">
-              {kakoDoNas.mapUrl ? (
-                <iframe
-                  src={kakoDoNas.mapUrl}
-                  width="100%"
-                  height="420"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="СЦ Рума — Мапа"
-                />
-              ) : (
-                <div className="p-6 text-sm opacity-80">Мапа није подешена у админ панелу.</div>
-              )}
-            </div>
+          <div className="map-wrapper">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=..."
+              loading="lazy"
+              allowFullScreen
+            ></iframe>
           </div>
         </Container>
       </section>
