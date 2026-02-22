@@ -43,3 +43,7 @@ export async function fetchHomePayload(): Promise<HomeApiPayload | null> {
     return null;
   }
 }
+
+export async function fetchHome(): Promise<HomeApiPayload | null> {
+  return fetchHomePayload();
+}
