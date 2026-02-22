@@ -1,10 +1,7 @@
 import { apiGetJson } from "./apiClient";
+import { API_BASE_URL } from "@/config/api";
 
-const BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-if (!BASE) {
-  throw new Error("NEXT_PUBLIC_API_BASE_URL није подешен.");
-}
+const BASE = API_BASE_URL;
 
 export const getApiBaseUrl = () => BASE;
 
