@@ -119,3 +119,112 @@ class HomePageView(View):
                 "sports": posts_payload(Post.TYPE_SPORT, limit=6),
             }
         )
+
+
+def _abs_media(request, path: str) -> str:
+    if not path:
+        return ""
+    return request.build_absolute_uri(path)
+
+
+class V1HomeView(View):
+    def get(self, request):
+        settings_obj = SiteSettings.objects.first()
+
+        if not settings_obj:
+            return JsonResponse(
+                {
+                    "settings": None,
+                    "announcements": [],
+                    "posts": [],
+                }
+            )
+
+        footer_columns = []
+        for col in settings_obj.footer_columns.all():
+            footer_columns.append(
+                {
+                    "title": col.title,
+                    "links": [{"label": l.label, "url": l.url} for l in col.links.all()],
+                }
+            )
+
+        announcements = Announcement.objects.order_by("-created_at")[:20]
+        posts = Post.objects.filter(is_published=True).order_by("-published_at")[:50]
+
+        data = {
+            "settings": {
+                "site_name": settings_obj.site_name,
+                "logo": _abs_media(request, settings_obj.logo.url) if settings_obj.logo else "",
+                "favicon": _abs_media(request, settings_obj.favicon.url) if settings_obj.favicon else "",
+                "hero_title": settings_obj.hero_title,
+                "hero_subtitle": settings_obj.hero_subtitle,
+                "hero_image": _abs_media(request, settings_obj.hero_image.url) if settings_obj.hero_image else "",
+                "maps_embed_url": settings_obj.maps_embed_url,
+                "footer_text": settings_obj.footer_text,
+                "footer_logo": _abs_media(request, settings_obj.footer_logo.url) if settings_obj.footer_logo else "",
+                "footer_bottom_text": settings_obj.footer_bottom_text,
+                "footer_columns": footer_columns,
+            },
+            "announcements": [
+                {
+                    "id": a.id,
+                    "title": a.title,
+                    "body": a.body,
+                    "created_at": a.created_at.isoformat(),
+                }
+                for a in announcements
+            ],
+            "posts": [
+                {
+                    "id": p.id,
+                    "type": p.type,
+                    "title": p.title,
+                    "excerpt": p.excerpt,
+                    "body": p.body,
+                    "image": _abs_media(request, p.image.url) if p.image else "",
+                    "is_published": p.is_published,
+                    "published_at": p.published_at.isoformat() if p.published_at else "",
+                }
+                for p in posts
+            ],
+        }
+        return JsonResponse(data)
+
+
+class V1PostsView(View):
+    def get(self, request):
+        qs = Post.objects.filter(is_published=True).order_by("-published_at")
+        ptype = (request.GET.get("type") or "").strip()
+        if ptype:
+            qs = qs.filter(type=ptype)
+
+        items = [
+            {
+                "id": p.id,
+                "type": p.type,
+                "title": p.title,
+                "excerpt": p.excerpt,
+                "body": p.body,
+                "image": _abs_media(request, p.image.url) if p.image else "",
+                "published_at": p.published_at.isoformat() if p.published_at else "",
+            }
+            for p in qs[:100]
+        ]
+        return JsonResponse({"items": items})
+
+
+class V1AnnouncementsView(View):
+    def get(self, request):
+        qs = Announcement.objects.order_by("-created_at")[:100]
+        items = [
+            {
+                "id": a.id,
+                "title": a.title,
+                "body": a.body,
+                "created_at": a.created_at.isoformat(),
+                "is_active": a.is_active,
+            }
+            for a in qs
+        ]
+        return JsonResponse({"items": items})
