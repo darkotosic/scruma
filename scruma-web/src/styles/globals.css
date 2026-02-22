@@ -380,10 +380,10 @@ footer {
 }
 
 .navbar.scrolled {
-  background: rgba(245, 245, 245, 0.95);
+  background: rgba(255, 253, 247, 0.92);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border-bottom-color: rgba(0, 0, 0, 0.08);
+  border-bottom-color: rgba(160, 145, 120, 0.22);
 }
 
 .nav-shell {
@@ -472,6 +472,38 @@ footer {
 :root[data-theme='dark'] .navbar.scrolled,
 body.dark .navbar.scrolled {
   background: rgba(20, 20, 20, 0.95);
+}
+
+.back-to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  border: 1px solid rgba(160, 145, 120, 0.35);
+  background: rgba(255, 253, 247, 0.92);
+  color: #1f2937;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+:root[data-theme='dark'] .back-to-top,
+body.dark .back-to-top {
+  background: rgba(24, 24, 24, 0.95);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #e5e7eb;
 }
 
 :root[data-theme='dark'] .nav-links a,

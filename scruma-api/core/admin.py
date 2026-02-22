@@ -1,4 +1,6 @@
+from django import forms
 from django.contrib import admin
+from django.db import models
 
 from .models import Announcement, FooterColumn, FooterLink, Page, Post, SiteSettings
 
@@ -15,14 +17,36 @@ class FooterLinkInline(admin.TabularInline):
     ordering = ("order", "id")
 
 
+class SCEditorAdminMixin:
+    """Додаје SCEditor на сва TextField поља у Django admin-у."""
+
+    formfield_overrides = {
+        models.TextField: {
+            "widget": forms.Textarea(attrs={"class": "vLargeTextField js-sceditor"})
+        }
+    }
+
+    class Media:
+        css = {
+            "all": (
+                "https://cdn.jsdelivr.net/npm/sceditor@3/minified/themes/default.min.css",
+            )
+        }
+        js = (
+            "https://cdn.jsdelivr.net/npm/sceditor@3/minified/sceditor.min.js",
+            "https://cdn.jsdelivr.net/npm/sceditor@3/minified/formats/xhtml.js",
+            "core/admin/sceditor-init.js",
+        )
+
+
 @admin.register(Announcement)
-class AnnouncementAdmin(admin.ModelAdmin):
+class AnnouncementAdmin(SCEditorAdminMixin, admin.ModelAdmin):
     list_display = ("title", "created_at")
     search_fields = ("title", "body")
 
 
 @admin.register(SiteSettings)
-class SiteSettingsAdmin(admin.ModelAdmin):
+class SiteSettingsAdmin(SCEditorAdminMixin, admin.ModelAdmin):
     list_display = ("site_name", "address", "updated_at")
     inlines = [FooterColumnInline]
     fieldsets = (
@@ -50,14 +74,14 @@ class FooterLinkAdmin(admin.ModelAdmin):
 
 
 @admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(SCEditorAdminMixin, admin.ModelAdmin):
     list_display = ("type", "title", "is_published", "published_at")
     list_filter = ("type", "is_published")
     search_fields = ("title", "excerpt", "body")
 
 
 @admin.register(Page)
-class PageAdmin(admin.ModelAdmin):
+class PageAdmin(SCEditorAdminMixin, admin.ModelAdmin):
     list_display = ("slug", "title", "show_in_nav", "nav_order", "updated_at")
     list_filter = ("show_in_nav",)
     search_fields = ("slug", "title", "subtitle", "body", "seo_title", "seo_description")
