@@ -107,3 +107,28 @@ CORS_ALLOWED_ORIGINS = [
     ).split(",")
     if origin.strip()
 ]
+
+# MEDIA (Render Disk)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.getenv("MEDIA_ROOT", str(BASE_DIR / "media"))
+
+# осигурај да постоји фолдер (Render disk је доступан у runtime-у)
+os.makedirs(MEDIA_ROOT, exist_ok=True)
+
+# CSRF trusted origins (за admin преко https домена)
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        "DJANGO_CSRF_TRUSTED_ORIGINS",
+        "https://scruma-api.onrender.com",
+    ).split(",")
+    if origin.strip()
+]
+
+# Продукциона безбедност (опционо преко ENV)
+SECURE_SSL_REDIRECT = os.getenv("DJANGO_SECURE_SSL_REDIRECT", "false").lower() == "true"
+CSRF_COOKIE_SECURE = os.getenv("DJANGO_CSRF_COOKIE_SECURE", "false").lower() == "true"
+SESSION_COOKIE_SECURE = os.getenv("DJANGO_SESSION_COOKIE_SECURE", "false").lower() == "true"
+
+# Render је иза proxy-а, ово помаже да Django препозна https
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

@@ -1,22 +1,61 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
+import Accordion from '@/components/Accordion';
+import CardGrid from '@/components/CardGrid';
 import Container from '@/components/Container';
+import GalleryGrid from '@/components/GalleryGrid';
 import Hero from '@/components/Hero';
 import SectionHeader from '@/components/SectionHeader';
-import CardGrid from '@/components/CardGrid';
-import Accordion from '@/components/Accordion';
-import GalleryGrid from '@/components/GalleryGrid';
 import { HOME } from '@/lib/content';
+import { fetchHomePayload } from '@/lib/homeApi';
+
+function mapPostsToCards(posts: any[]) {
+  return posts.map((p) => ({
+    title: p.title,
+    subtitle: p.excerpt,
+    date: p.published_at?.slice(0, 10),
+    image: p.image || undefined,
+    href: p.link_url || '/vesti',
+  }));
+}
 
 export default function HomePage() {
+  const [hero, setHero] = useState(HOME.hero);
+  const [obavestenja, setObavestenja] = useState(HOME.obavestenja);
+  const [vesti, setVesti] = useState(HOME.vesti);
+  const [sportskeVesti, setSportskeVesti] = useState(HOME.sportskeVesti);
+  const [mapsEmbedUrl, setMapsEmbedUrl] = useState<string>('');
+
+  useEffect(() => {
+    let alive = true;
+
+    (async () => {
+      const payload = await fetchHomePayload();
+      if (!payload || !alive) return;
+
+      setHero({
+        title: payload.settings.hero_title || HOME.hero.title,
+        subtitle: payload.settings.hero_subtitle || HOME.hero.subtitle,
+        image: payload.settings.hero_image || HOME.hero.image,
+        ctas: HOME.hero.ctas,
+      });
+
+      setObavestenja(mapPostsToCards(payload.notices));
+      setVesti(mapPostsToCards(payload.news));
+      setSportskeVesti(mapPostsToCards(payload.sports));
+      setMapsEmbedUrl(payload.settings.maps_embed_url || '');
+    })();
+
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   return (
     <>
-      <Hero
-        title={HOME.hero.title}
-        subtitle={HOME.hero.subtitle}
-        image={HOME.hero.image}
-        ctas={HOME.hero.ctas}
-      />
+      <Hero title={hero.title} subtitle={hero.subtitle} image={hero.image} ctas={hero.ctas} />
 
       <section className="pageSection">
         <Container>
@@ -24,28 +63,21 @@ export default function HomePage() {
             title="Обавештења"
             subtitle="Најважније информације — приоритетна обавештења и измене режима рада."
           />
-          <CardGrid items={HOME.obavestenja} />
+          <CardGrid items={obavestenja} />
         </Container>
       </section>
 
       <section className="pageSection">
         <Container>
           <SectionHeader title="Вести" subtitle="Најновија дешавања у Спортском центру." />
-          <CardGrid items={HOME.vesti} />
+          <CardGrid items={vesti} />
         </Container>
       </section>
 
       <section className="pageSection">
         <Container>
-          <SectionHeader title="Дешавања" subtitle="Предстојећи догађаји и активности." />
-          <CardGrid items={HOME.desavanja} />
-        </Container>
-      </section>
-
-      <section className="pageSection">
-        <Container>
-          <SectionHeader title="Спортске вести" subtitle="Спортски фид — касније преко API v1." />
-          <CardGrid items={HOME.sportskeVesti} />
+          <SectionHeader title="Спортске вести" subtitle="Резултати, најаве и локални спорт." />
+          <CardGrid items={sportskeVesti} />
         </Container>
       </section>
 
@@ -60,6 +92,21 @@ export default function HomePage() {
         <Container>
           <SectionHeader title="Како до нас?" subtitle="Брзе информације за посетиоце." />
           <Accordion items={HOME.kakoDoNas} />
+
+          {mapsEmbedUrl ? (
+            <div style={{ marginTop: 16 }}>
+              <iframe
+                title="Гугл мапа"
+                src={mapsEmbedUrl}
+                width="100%"
+                height="380"
+                loading="lazy"
+                style={{ border: 0, borderRadius: 14 }}
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+            </div>
+          ) : null}
         </Container>
       </section>
     </>
