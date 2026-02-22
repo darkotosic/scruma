@@ -5,6 +5,7 @@ import { useScript } from "@/context/ScriptContext";
 
 export default function Footer() {
   const { t } = useScript();
+  const facebookUrl = "https://www.facebook.com/p/Ustanova-Sportski-centar-Ruma-100041307083076/";
 
   return (
     <footer className="footer">
@@ -32,6 +33,17 @@ export default function Footer() {
         <div className="footer-copy">
           <p>{t("© 2026 Спортски центар Рума")}</p>
           <p>{t("Израда и дизајн: Дарко Тошић")}</p>
+          <p>
+            <a
+              href={facebookUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="footer-facebook"
+              aria-label={t("Фејсбук")}
+            >
+              📘 {t("Фејсбук")}
+            </a>
+          </p>
         </div>
       </div>
     </footer>

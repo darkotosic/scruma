@@ -11,6 +11,7 @@ import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
 
 export default function Header() {
   const { t } = useScript();
+  const facebookUrl = "https://www.facebook.com/p/Ustanova-Sportski-centar-Ruma-100041307083076/";
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -98,6 +99,15 @@ export default function Header() {
             ) : null}
             <ScriptToggle className="glass-btn" id="langToggle" />
             <ThemeToggle className="glass-btn" id="themeToggle" />
+            <a
+              href={facebookUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="glass-btn"
+              aria-label={t("Фејсбук")}
+            >
+              📘
+            </a>
           </div>
 
           <button
@@ -147,6 +157,15 @@ export default function Header() {
           <div className="nav-mobile-actions">
             <ScriptToggle className="glass-btn" id="langToggleMobile" />
             <ThemeToggle className="glass-btn" id="themeToggleMobile" />
+            <a
+              href={facebookUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="glass-btn"
+              aria-label={t("Фејсбук")}
+            >
+              📘
+            </a>
           </div>
         </aside>
       </div>
