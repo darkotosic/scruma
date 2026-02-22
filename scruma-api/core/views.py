@@ -151,6 +151,9 @@ class V1HomeView(View):
 
         announcements = Announcement.objects.order_by("-created_at")[:20]
         posts = Post.objects.filter(is_published=True).order_by("-published_at")[:50]
+        # footer_logo / footer_bottom_text могу да не постоје у старијој шеми
+        _footer_logo = getattr(settings_obj, "footer_logo", None)
+        _footer_bottom_text = getattr(settings_obj, "footer_bottom_text", "")
 
         data = {
             "settings": {
@@ -162,8 +165,8 @@ class V1HomeView(View):
                 "hero_image": _abs_media(request, settings_obj.hero_image.url) if settings_obj.hero_image else "",
                 "maps_embed_url": settings_obj.maps_embed_url,
                 "footer_text": settings_obj.footer_text,
-                "footer_logo": _abs_media(request, settings_obj.footer_logo.url) if settings_obj.footer_logo else "",
-                "footer_bottom_text": settings_obj.footer_bottom_text,
+                "footer_logo": _abs_media(request, _footer_logo.url) if _footer_logo else "",
+                "footer_bottom_text": _footer_bottom_text,
                 "footer_columns": footer_columns,
             },
             "announcements": [
