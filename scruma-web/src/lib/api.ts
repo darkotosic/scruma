@@ -99,6 +99,11 @@ export function fetchSite() {
   return fetchJson<SiteResponse>("/api/v1/site/");
 }
 
+export async function fetchSiteSettings() {
+  const data = await fetchSite();
+  return data.settings || {};
+}
+
 export function fetchNav() {
   return fetchJson<NavResponse>("/api/v1/nav/");
 }
