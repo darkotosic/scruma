@@ -14,8 +14,8 @@ import { fetchHome } from '@/lib/homeApi';
 function mapPostsToCards(posts: any[]) {
   return posts.map((p) => ({
     title: p.title,
-    subtitle: p.excerpt,
-    date: p.published_at?.slice(0, 10),
+    subtitle: p.excerpt || p.body || '',
+    date: (p.published_at || p.created_at || '').slice(0, 10),
     image: p.image || undefined,
     href: p.link_url || '/vesti',
   }));
