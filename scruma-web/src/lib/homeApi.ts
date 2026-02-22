@@ -43,3 +43,19 @@ export async function fetchHomePayload(): Promise<HomeApiPayload | null> {
     return null;
   }
 }
+
+export async function fetchHome() {
+  const payload = await fetchHomePayload();
+
+  if (!payload) {
+    return null;
+  }
+
+  return {
+    posts: [
+      ...(payload.news ?? []).map((item) => ({ ...item, type: 'news' })),
+      ...(payload.notices ?? []).map((item) => ({ ...item, type: 'notice' })),
+      ...(payload.sports ?? []).map((item) => ({ ...item, type: 'sport' }))
+    ]
+  };
+}
