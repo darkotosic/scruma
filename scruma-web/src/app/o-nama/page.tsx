@@ -1,12 +1,5 @@
-'use client';
+import CmsPage from "@/components/CmsPage";
 
-import { useScriptText } from '@/components/ScriptToggle';
-
-export default function AboutPage() {
-  return (
-    <section>
-      <h1>{useScriptText('О нама')}</h1>
-      <p>{useScriptText('СК Рума је клуб посвећен спорту, заједници и развоју младих талената.')}</p>
-    </section>
-  );
+export default function Page() {
+  return <CmsPage slug="o-nama" fallbackTitle="О нама" />;
 }

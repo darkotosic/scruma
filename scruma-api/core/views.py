@@ -2,7 +2,7 @@ from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.views import View
 
-from .models import Announcement, Post, SiteSettings
+from .models import Announcement, Page, Post, SiteSettings
 
 
 class HomeStatusView(View):
@@ -219,7 +219,7 @@ class V1PostsView(View):
 
 class V1AnnouncementsView(View):
     def get(self, request):
-        qs = Announcement.objects.order_by("-created_at")[:100]
+        qs = Announcement.objects.filter(is_active=True).order_by("-created_at")[:100]
         items = [
             {
                 "id": a.id,
@@ -231,3 +231,70 @@ class V1AnnouncementsView(View):
             for a in qs
         ]
         return JsonResponse({"items": items})
+
+
+class V1SiteView(View):
+    def get(self, request):
+        s = SiteSettings.objects.first()
+        if not s:
+            return JsonResponse({"settings": None})
+
+        footer_columns = []
+        for col in s.footer_columns.all():
+            footer_columns.append(
+                {
+                    "title": col.title,
+                    "links": [{"label": l.label, "url": l.url} for l in col.links.all()],
+                }
+            )
+
+        data = {
+            "settings": {
+                "site_name": s.site_name,
+                "logo": _abs_media(request, s.logo.url) if s.logo else "",
+                "favicon": _abs_media(request, s.favicon.url) if s.favicon else "",
+                "hero_title": s.hero_title,
+                "hero_subtitle": s.hero_subtitle,
+                "hero_image": _abs_media(request, s.hero_image.url) if s.hero_image else "",
+                "maps_embed_url": s.maps_embed_url,
+                "footer_text": s.footer_text,
+                "footer_logo": _abs_media(request, s.footer_logo.url) if getattr(s, "footer_logo", None) else "",
+                "footer_bottom_text": getattr(s, "footer_bottom_text", ""),
+                "footer_columns": footer_columns,
+            }
+        }
+        return JsonResponse(data)
+
+
+class V1NavView(View):
+    def get(self, request):
+        qs = Page.objects.filter(show_in_nav=True).order_by("nav_order", "id")
+        items = [{"href": "/" + p.slug.strip("/"), "label": p.title or p.slug} for p in qs]
+        for it in items:
+            if it["href"] == "/":
+                it["href"] = "/"
+        return JsonResponse({"items": items})
+
+
+class V1PageView(View):
+    def get(self, request, slug: str):
+        slug = (slug or "").strip("/")
+        try:
+            p = Page.objects.get(slug=slug)
+        except Page.DoesNotExist:
+            return JsonResponse({"page": None, "missing": True, "slug": slug}, status=404)
+
+        return JsonResponse(
+            {
+                "page": {
+                    "slug": p.slug,
+                    "title": p.title,
+                    "subtitle": p.subtitle,
+                    "body": p.body,
+                    "hero_image": _abs_media(request, p.hero_image.url) if p.hero_image else "",
+                    "seo_title": p.seo_title,
+                    "seo_description": p.seo_description,
+                    "updated_at": p.updated_at.isoformat(),
+                }
+            }
+        )

@@ -1,13 +1,5 @@
-'use client';
+import CmsPage from "@/components/CmsPage";
 
-import { useScriptText } from '@/components/ScriptToggle';
-
-export default function ContactPage() {
-  return (
-    <section>
-      <h1>{useScriptText('Контакт')}</h1>
-      <p>{useScriptText('Е-пошта: info@skruma.rs')}</p>
-      <p>{useScriptText('Телефон: +381 22 000 000')}</p>
-    </section>
-  );
+export default function Page() {
+  return <CmsPage slug="kontakt" fallbackTitle="Контакт" />;
 }

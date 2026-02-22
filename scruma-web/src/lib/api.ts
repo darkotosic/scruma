@@ -7,36 +7,33 @@ export const fetchApiHealth = async (): Promise<{ ok: boolean; message: string }
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
-
-    // Усклађено са Django рутирањем: /api/health/
     const response = await fetch(`${API_BASE_URL}/api/health/`, { signal: controller.signal });
-
     clearTimeout(timeout);
 
     if (!response.ok) return { ok: false, message: "API је доступан, али враћа грешку." };
 
     return { ok: true, message: "API је доступан." };
   } catch {
-    return { ok: false, message: "API није доступан. Приказан је статички fallback." };
+    return { ok: false, message: "API није доступан." };
   }
 };
 
-export async function fetchJson<T>(path: string, fallback: T): Promise<T> {
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 3500);
+export async function fetchJson<T>(path: string): Promise<T> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 3500);
 
+  try {
     const response = await fetch(`${API_BASE_URL}${path}`, {
       signal: controller.signal,
       cache: "no-store",
     });
 
-    clearTimeout(timeout);
-
-    if (!response.ok) return fallback;
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
 
     return (await response.json()) as T;
-  } catch {
-    return fallback;
+  } finally {
+    clearTimeout(timeout);
   }
 }

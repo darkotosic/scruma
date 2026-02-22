@@ -1,15 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchHome } from "@/lib/homeApi";
+import { fetchSite } from "@/lib/cmsApi";
 
 export default function Footer() {
   const [settings, setSettings] = useState<any>(null);
 
   useEffect(() => {
     (async () => {
-      const data = await fetchHome();
-      if (data?.settings) setSettings(data.settings);
+      try {
+        const data = await fetchSite();
+        setSettings(data?.settings ?? null);
+      } catch {
+        setSettings(null);
+      }
     })();
   }, []);
 
@@ -22,10 +26,7 @@ export default function Footer() {
     <footer className="mt-16 border-t border-black/10 dark:border-white/10">
       <div className="mx-auto max-w-6xl px-4 py-10">
         <div className="flex items-center gap-3">
-          {footerLogo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={footerLogo} alt="Футер лого" className="h-10 w-auto" />
-          ) : null}
+          {footerLogo ? <img src={footerLogo} alt="Футер лого" className="h-10 w-auto" /> : null}
           <div className="text-sm opacity-80">{settings?.site_name || "СК Рума"}</div>
         </div>
 

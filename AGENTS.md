@@ -30,3 +30,8 @@
 - `.cpanel.yml` successfully deploys to `public_html`.
 - Render deploys `scruma-api` with migrations + static collection.
 - Admin can manage: announcements, match previews, and page content.
+
+
+## CMS политика
+- API као једина истина: не враћати локалне текстуалне fallback садржаје у `scruma-web/src/lib/content.ts`.
+- Relax rule је дозвољен само као статусни приказ „Садржај још није унет“.
