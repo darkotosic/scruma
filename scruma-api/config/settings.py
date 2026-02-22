@@ -111,9 +111,8 @@ CORS_ALLOWED_ORIGINS = [
 # MEDIA (Render Disk)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.getenv("MEDIA_ROOT", str(BASE_DIR / "media"))
-
-# осигурај да постоји фолдер (Render disk је доступан у runtime-у)
-os.makedirs(MEDIA_ROOT, exist_ok=True)
+if os.getenv("RENDER", "") and "MEDIA_ROOT" not in os.environ:
+    MEDIA_ROOT = "/tmp/media"
 
 # CSRF trusted origins (за admin преко https домена)
 CSRF_TRUSTED_ORIGINS = [
