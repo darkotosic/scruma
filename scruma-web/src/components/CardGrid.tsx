@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useScriptText } from '@/components/ScriptToggle';
+import { useScript } from '@/context/ScriptContext';
 
 type Item = {
   title: string;
@@ -13,6 +13,7 @@ type Item = {
 };
 
 export default function CardGrid({ items }: { items: Item[] }) {
+  const { t } = useScript();
   return (
     <div className="grid">
       {items.map((it) => {
@@ -21,20 +22,20 @@ export default function CardGrid({ items }: { items: Item[] }) {
             {it.image ? (
               <div className="cardMedia">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={it.image} alt={useScriptText(it.title)} loading="lazy" />
+                <img src={it.image} alt={t(it.title)} loading="lazy" />
               </div>
             ) : null}
 
             <div className="cardBody">
               <div className="cardTop">
-                {it.tag ? <span className="badge">{useScriptText(it.tag)}</span> : null}
-                {it.date ? <span className="muted">{useScriptText(it.date)}</span> : null}
+                {it.tag ? <span className="badge">{t(it.tag)}</span> : null}
+                {it.date ? <span className="muted">{t(it.date)}</span> : null}
               </div>
 
-              <h3 className="cardTitle">{useScriptText(it.title)}</h3>
-              {it.subtitle ? <p className="cardSubtitle">{useScriptText(it.subtitle)}</p> : null}
+              <h3 className="cardTitle">{t(it.title)}</h3>
+              {it.subtitle ? <p className="cardSubtitle">{t(it.subtitle)}</p> : null}
 
-              {it.href ? <span className="cardLink">{useScriptText('Сазнајте више')}</span> : null}
+              {it.href ? <span className="cardLink">{t('Сазнајте више')}</span> : null}
             </div>
           </div>
         );

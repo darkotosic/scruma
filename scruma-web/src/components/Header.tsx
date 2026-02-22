@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import ScriptToggle, { useScriptText } from "./ScriptToggle";
+import ScriptToggle from "./ScriptToggle";
+import { useScript } from "@/context/ScriptContext";
 import ThemeToggle from "./ThemeToggle";
 import { fetchNav, fetchSiteSettings } from "@/lib/api";
 import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
@@ -10,6 +11,7 @@ import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
 type NavItem = { href: string; label: string };
 
 export default function Header() {
+  const { t } = useScript();
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -64,23 +66,23 @@ export default function Header() {
     if (!logoUrl) {
       return <div className={className || "h-9 w-28"} />;
     }
-    return <img src={logoUrl} alt={useScriptText("Спортски центар Рума")} className={className} />;
+    return <img src={logoUrl} alt={t("Спортски центар Рума")} className={className} />;
   };
 
   return (
     <header id="navbar" className={`navbar${isScrolled ? " scrolled" : ""}`}>
       <div className="nav-shell">
         <div className="nav-container">
-          <Link href="/" className="logo-wrapper" aria-label={useScriptText("Почетна страница")}>
+          <Link href="/" className="logo-wrapper" aria-label={t("Почетна страница")}>
             <Logo className="nav-logo" />
           </Link>
 
-          <nav className="nav-links" aria-label={useScriptText("Главна навигација")}>
+          <nav className="nav-links" aria-label={t("Главна навигација")}>
             {navItems === null
               ? [1, 2, 3, 4].map((i) => <SkeletonBlock key={i} className="h-6 w-20" />)
               : navItems.map((item) => (
                   <Link key={item.href} href={item.href}>
-                    {useScriptText(item.label)}
+                    {t(item.label)}
                   </Link>
                 ))}
           </nav>
@@ -98,7 +100,7 @@ export default function Header() {
           <button
             type="button"
             className="nav-burger"
-            aria-label={useScriptText("Отвори мени")}
+            aria-label={t("Отвори мени")}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
           >
@@ -113,10 +115,10 @@ export default function Header() {
         <button
           type="button"
           className="nav-mobile-overlay"
-          aria-label={useScriptText("Затвори мени")}
+          aria-label={t("Затвори мени")}
           onClick={() => setMenuOpen(false)}
         />
-        <aside className="nav-mobile-drawer" aria-label={useScriptText("Мени")}>
+        <aside className="nav-mobile-drawer" aria-label={t("Мени")}>
           <div className="nav-mobile-header">
             <Link href="/" className="nav-mobile-logo" onClick={() => setMenuOpen(false)}>
               <Logo className="h-9 w-auto" />
@@ -124,17 +126,17 @@ export default function Header() {
             <button
               type="button"
               className="nav-mobile-close"
-              aria-label={useScriptText("Затвори мени")}
+              aria-label={t("Затвори мени")}
               onClick={() => setMenuOpen(false)}
             >
               ✕
             </button>
           </div>
 
-          <nav className="nav-mobile-links" aria-label={useScriptText("Навигација")}>
+          <nav className="nav-mobile-links" aria-label={t("Навигација")}>
             {(navItems || []).map((item) => (
               <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
-                {useScriptText(item.label)}
+                {t(item.label)}
               </Link>
             ))}
           </nav>

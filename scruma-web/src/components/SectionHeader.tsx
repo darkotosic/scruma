@@ -1,6 +1,6 @@
 'use client';
 
-import { useScriptText } from '@/components/ScriptToggle';
+import { useScript } from '@/context/ScriptContext';
 
 export default function SectionHeader({
   title,
@@ -9,10 +9,11 @@ export default function SectionHeader({
   title: string;
   subtitle?: string;
 }) {
+  const { t } = useScript();
   return (
     <div className="sectionHeader">
-      <h2 className="sectionTitle">{useScriptText(title)}</h2>
-      {subtitle ? <p className="sectionSubtitle">{useScriptText(subtitle)}</p> : null}
+      <h2 className="sectionTitle">{t(title)}</h2>
+      {subtitle ? <p className="sectionSubtitle">{t(subtitle)}</p> : null}
     </div>
   );
 }

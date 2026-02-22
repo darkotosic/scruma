@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SiteFavicon from "@/components/SiteFavicon";
+import ClientProviders from "@/context/ClientProviders";
 
 export const metadata: Metadata = {
   title: "СЦ Рума",
@@ -18,10 +19,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="sr">
       <body>
-        <SiteFavicon />
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <ClientProviders>
+          <SiteFavicon />
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </ClientProviders>
       </body>
     </html>
   );
