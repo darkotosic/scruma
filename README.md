@@ -47,3 +47,8 @@
 ## CMS извор истине
 - Frontend садржај се учитава искључиво преко API (`/api/v1/...`), без локалног fallback садржаја.
 - Када CMS садржај није унет, странице приказују статусну поруку „Садржај још није унет“.
+
+## Enterprise документација
+- Детаљна enterprise анализа и фазни план: `docs/ENTERPRISE_GRADE_PLAN.md`
+- Комплетан инвентар Git-праћених фајлова: `docs/FILE_INVENTORY.md`
+- Генерација инвентара: `scripts/generate_file_inventory.sh`
