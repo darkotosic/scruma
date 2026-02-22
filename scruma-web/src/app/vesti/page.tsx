@@ -5,9 +5,10 @@ import PageHero from "@/components/PageHero";
 import Section from "@/components/Section";
 import CardsGrid from "@/components/CardsGrid";
 import { fetchJson } from "@/lib/api";
+import { FALLBACK_POSTS } from "@/content/fallback";
 
 export default function VestiPage() {
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<any[]>(FALLBACK_POSTS.filter((p) => p.type === "news"));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export default function VestiPage() {
         const data = await fetchJson<{ items: any[] }>("/api/v1/posts/?type=news");
         setPosts(data?.items || []);
       } catch {
-        setPosts([]);
+        setPosts(FALLBACK_POSTS.filter((p) => p.type === "news"));
       } finally {
         setLoading(false);
       }

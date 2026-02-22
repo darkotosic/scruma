@@ -2,17 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { fetchSite } from "@/lib/cmsApi";
+import { FALLBACK_SITE } from "@/content/fallback";
 
 export default function Footer() {
-  const [settings, setSettings] = useState<any>(null);
+  const [settings, setSettings] = useState<any>(FALLBACK_SITE.settings);
 
   useEffect(() => {
     (async () => {
       try {
         const data = await fetchSite();
-        setSettings(data?.settings ?? null);
+        setSettings(data?.settings ?? FALLBACK_SITE.settings);
       } catch {
-        setSettings(null);
+        setSettings(FALLBACK_SITE.settings);
       }
     })();
   }, []);
