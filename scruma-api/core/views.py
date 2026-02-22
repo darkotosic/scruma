@@ -150,6 +150,7 @@ class V1SiteView(View):
                     "hero_title": s.hero_title,
                     "hero_subtitle": s.hero_subtitle,
                     "hero_image": _abs_media(request, s.hero_image.url) if s.hero_image else "",
+                    "address": getattr(s, "address", ""),
                     "maps_embed_url": s.maps_embed_url,
                     "footer_text": s.footer_text,
                     "footer_logo": _abs_media(request, s.footer_logo.url) if getattr(s, "footer_logo", None) else "",

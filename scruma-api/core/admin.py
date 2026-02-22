@@ -23,8 +23,15 @@ class AnnouncementAdmin(admin.ModelAdmin):
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
-    list_display = ("site_name", "updated_at")
+    list_display = ("site_name", "address", "updated_at")
     inlines = [FooterColumnInline]
+    fieldsets = (
+        ("Основно", {"fields": ("site_name", "address")}),
+        ("Брендинг", {"fields": ("logo", "favicon")}),
+        ("Херо", {"fields": ("hero_title", "hero_subtitle", "hero_image")}),
+        ("Мапа", {"fields": ("maps_embed_url",)}),
+        ("Футер", {"fields": ("footer_text", "footer_logo", "footer_bottom_text")}),
+    )
 
 
 @admin.register(FooterColumn)

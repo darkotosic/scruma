@@ -41,7 +41,7 @@ export default function Footer() {
 
   const columns = settings.footer_columns || [];
   const footerLogo = settings.footer_logo || "";
-  const bottom = settings.footer_bottom_text || "© 2026 СК Рума — Званична интернет презентација";
+  const bottom = settings.footer_bottom_text || "© 2026 СЦ Рума — Званична интернет презентација";
   const legacy = settings.footer_text || "";
 
   return (

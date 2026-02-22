@@ -3,13 +3,13 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 export const metadata = {
-  title: 'СК Рума',
+  title: 'СЦ Рума',
   description: 'Званична интернет презентација Спортског центра Рума.',
   openGraph: {
-    title: 'СК Рума',
+    title: 'СЦ Рума',
     description: 'Званична интернет презентација Спортског центра Рума.',
-    type: 'website'
-  }
+    type: 'website',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

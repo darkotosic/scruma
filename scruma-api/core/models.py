@@ -21,13 +21,18 @@ class SiteSettings(models.Model):
     hero_title = models.CharField(max_length=160, default="Спортски центар Рума")
     hero_subtitle = models.TextField(blank=True, default="")
     hero_image = models.ImageField(upload_to="site/", blank=True, null=True)
+    address = models.CharField(
+        "Адреса",
+        max_length=200,
+        blank=True,
+        default="Veljka Dugoševića 100, Ruma",
+    )
 
-    # ✅ Замена: URLField -> CharField, + verbose_name, max_length=250
     maps_embed_url = models.CharField(
         "Уграђена мапа (URL)",
-        max_length=250,
+        max_length=600,
         blank=True,
-        default="",
+        default="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2106.4186091167267!2d19.816897856951133!3d45.00865869273741!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x475babf00502b12f%3A0xa91ad9140edc7e6a!2z0KHQv9C-0YDRgtGB0LrQviDQv9C-0YHQu9C-0LLQvdC4INGG0LXQvdGC0LDRgA!5e1!3m2!1sen!2srs!4v1771758999050!5m2!1sen!2srs",
     )
 
     footer_text = models.CharField(max_length=200, blank=True, default="")
