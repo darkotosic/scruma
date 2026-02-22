@@ -1,5 +1,18 @@
-- cd scruma-web
-- npm install
-- npm run build
-- npm run export
-- /usr/bin/rsync ...
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/digita28/public_html/
+    - export REPOPATH=$(pwd)
+    - export SOURCEPATH="$REPOPATH/scruma-web/out/"
+
+    - echo "REPOPATH=$REPOPATH"
+    - echo "SOURCEPATH=$SOURCEPATH"
+    - if [ ! -d "$SOURCEPATH" ]; then echo "SOURCEPATH не постоји: $SOURCEPATH" && exit 1; fi
+    - if [ ! -f "$SOURCEPATH/index.html" ]; then echo "index.html не постоји у: $SOURCEPATH" && exit 1; fi
+
+    - /usr/bin/rsync -a --delete \
+        --exclude ".well-known/" \
+        --exclude "cgi-bin/" \
+        "$SOURCEPATH" "$DEPLOYPATH"
+
+    - echo "deploy $(date)" > "$DEPLOYPATH/deploy.txt"
