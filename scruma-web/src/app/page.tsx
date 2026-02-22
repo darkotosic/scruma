@@ -35,17 +35,21 @@ export default function HomePage() {
       const payload = await fetchHome();
       if (!alive) return;
 
+      const settings = payload?.settings ?? null;
+      const announcements = payload?.announcements ?? [];
+      const posts = payload?.posts ?? [];
+
       setHero({
-        title: payload.settings?.hero_title || HOME.hero.title,
-        subtitle: payload.settings?.hero_subtitle || HOME.hero.subtitle,
-        image: payload.settings?.hero_image || HOME.hero.image,
+        title: settings?.hero_title || HOME.hero.title,
+        subtitle: settings?.hero_subtitle || HOME.hero.subtitle,
+        image: settings?.hero_image || HOME.hero.image,
         ctas: HOME.hero.ctas,
       });
 
-      setObavestenja(mapPostsToCards(payload.announcements));
-      setVesti(mapPostsToCards(payload.posts));
+      setObavestenja(mapPostsToCards(announcements));
+      setVesti(mapPostsToCards(posts));
       setSportskeVesti(HOME.sportskeVesti);
-      setMapsEmbedUrl(payload.settings?.maps_embed_url || '');
+      setMapsEmbedUrl(settings?.maps_embed_url || '');
     })();
 
     return () => {
