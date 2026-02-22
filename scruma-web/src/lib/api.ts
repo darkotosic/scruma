@@ -20,3 +20,23 @@ export const fetchApiHealth = async (): Promise<{ ok: boolean; message: string }
     return { ok: false, message: "API није доступан. Приказан је статички fallback." };
   }
 };
+
+export async function fetchJson<T>(path: string, fallback: T): Promise<T> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3500);
+
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      signal: controller.signal,
+      cache: "no-store",
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) return fallback;
+
+    return (await response.json()) as T;
+  } catch {
+    return fallback;
+  }
+}

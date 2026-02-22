@@ -9,7 +9,7 @@ import GalleryGrid from '@/components/GalleryGrid';
 import Hero from '@/components/Hero';
 import SectionHeader from '@/components/SectionHeader';
 import { HOME } from '@/lib/content';
-import { fetchHomePayload } from '@/lib/homeApi';
+import { fetchHome } from '@/lib/homeApi';
 
 function mapPostsToCards(posts: any[]) {
   return posts.map((p) => ({
@@ -32,20 +32,20 @@ export default function HomePage() {
     let alive = true;
 
     (async () => {
-      const payload = await fetchHomePayload();
-      if (!payload || !alive) return;
+      const payload = await fetchHome();
+      if (!alive) return;
 
       setHero({
-        title: payload.settings.hero_title || HOME.hero.title,
-        subtitle: payload.settings.hero_subtitle || HOME.hero.subtitle,
-        image: payload.settings.hero_image || HOME.hero.image,
+        title: payload.settings?.hero_title || HOME.hero.title,
+        subtitle: payload.settings?.hero_subtitle || HOME.hero.subtitle,
+        image: payload.settings?.hero_image || HOME.hero.image,
         ctas: HOME.hero.ctas,
       });
 
-      setObavestenja(mapPostsToCards(payload.notices));
-      setVesti(mapPostsToCards(payload.news));
-      setSportskeVesti(mapPostsToCards(payload.sports));
-      setMapsEmbedUrl(payload.settings.maps_embed_url || '');
+      setObavestenja(mapPostsToCards(payload.announcements));
+      setVesti(mapPostsToCards(payload.posts));
+      setSportskeVesti(HOME.sportskeVesti);
+      setMapsEmbedUrl(payload.settings?.maps_embed_url || '');
     })();
 
     return () => {
