@@ -8,6 +8,7 @@ import Hero from '@/components/Hero';
 import SectionHeader from '@/components/SectionHeader';
 import { fetchJson } from '@/lib/api';
 import { fetchSite } from '@/lib/cmsApi';
+import { FALLBACK_SITE, FALLBACK_ANNOUNCEMENTS, FALLBACK_POSTS } from '@/content/fallback';
 
 function mapPostsToCards(posts: any[]) {
   return posts.map((p) => ({
@@ -20,10 +21,15 @@ function mapPostsToCards(posts: any[]) {
 }
 
 export default function HomePage() {
-  const [hero, setHero] = useState({ title: '', subtitle: '', image: '', ctas: [] as any[] });
-  const [obavestenja, setObavestenja] = useState<any[]>([]);
-  const [vesti, setVesti] = useState<any[]>([]);
-  const [sportskeVesti, setSportskeVesti] = useState<any[]>([]);
+  const [hero, setHero] = useState({
+    title: FALLBACK_SITE.settings.hero_title,
+    subtitle: FALLBACK_SITE.settings.hero_subtitle,
+    image: FALLBACK_SITE.settings.hero_image || '',
+    ctas: [] as any[],
+  });
+  const [obavestenja, setObavestenja] = useState<any[]>(mapPostsToCards(FALLBACK_ANNOUNCEMENTS as any[]));
+  const [vesti, setVesti] = useState<any[]>(mapPostsToCards(FALLBACK_POSTS.filter((p) => p.type === 'news') as any[]));
+  const [sportskeVesti, setSportskeVesti] = useState<any[]>(mapPostsToCards(FALLBACK_POSTS.filter((p) => p.type === 'sport') as any[]));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,10 +47,8 @@ export default function HomePage() {
 
         const settings = siteData?.settings;
         setHero({
-          title: settings?.hero_title || 'Садржај није унет',
-          subtitle:
-            settings?.hero_subtitle ||
-            'Администратор још није унео податке за почетну страницу.',
+          title: settings?.hero_title || FALLBACK_SITE.settings.hero_title,
+          subtitle: settings?.hero_subtitle || FALLBACK_SITE.settings.hero_subtitle,
           image: settings?.hero_image || '',
           ctas: [],
         });
@@ -54,12 +58,6 @@ export default function HomePage() {
         setSportskeVesti(mapPostsToCards(sportsData?.items || []));
       } catch {
         if (!alive) return;
-        setHero({
-          title: 'Садржај није унет',
-          subtitle: 'Администратор још није унео податке за почетну страницу.',
-          image: '',
-          ctas: [],
-        });
       } finally {
         if (alive) setLoading(false);
       }

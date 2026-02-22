@@ -5,6 +5,7 @@ import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
 import ScriptToggle, { useScriptText } from './ScriptToggle';
 import { fetchNav } from '@/lib/cmsApi';
+import { FALLBACK_NAV } from '@/content/fallback';
 
 type NavItem = { href: string; label: string };
 
@@ -34,11 +35,7 @@ export default function Header() {
         if (!alive) return;
         setNavItems(data.items || []);
       } catch {
-        setNavItems([
-          { href: '/', label: 'Почетна' },
-          { href: '/o-nama', label: 'О нама' },
-          { href: '/kontakt', label: 'Контакт' },
-        ]);
+        setNavItems(FALLBACK_NAV.items);
       }
     })();
     return () => {

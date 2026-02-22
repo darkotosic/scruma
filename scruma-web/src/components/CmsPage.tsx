@@ -1,42 +1,51 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PageHero from "@/components/PageHero";
 import Container from "@/components/Container";
 import { fetchPage } from "@/lib/cmsApi";
+import { FALLBACK_PAGES } from "@/content/fallback";
 
 export default function CmsPage({ slug, fallbackTitle }: { slug: string; fallbackTitle: string }) {
-  const [title, setTitle] = useState(fallbackTitle);
-  const [subtitle, setSubtitle] = useState("");
-  const [body, setBody] = useState("");
-  const [heroImage, setHeroImage] = useState("");
+  const local = useMemo(() => FALLBACK_PAGES[slug], [slug]);
+
+  const [title, setTitle] = useState(local?.title || fallbackTitle);
+  const [subtitle, setSubtitle] = useState(local?.subtitle || "");
+  const [body, setBody] = useState(local?.body || "");
+  const [heroImage, setHeroImage] = useState(local?.hero_image || "");
   const [missing, setMissing] = useState(false);
 
   useEffect(() => {
+    // ако slug није у fallback-у, не ломи UX: ипак прикажи бар поруку, па пробај API
     let alive = true;
+
     (async () => {
       try {
         const data = await fetchPage(slug);
         if (!alive) return;
 
         if (!data.page) {
-          setMissing(true);
+          // Ако немамо ни API садржај, а имамо локални, НЕ сматрај као missing
+          if (!local) setMissing(true);
           return;
         }
 
-        setTitle(data.page.title || fallbackTitle);
-        setSubtitle(data.page.subtitle || "");
-        setBody(data.page.body || "");
-        setHeroImage(data.page.hero_image || "");
+        setTitle(data.page.title || local?.title || fallbackTitle);
+        setSubtitle(data.page.subtitle || local?.subtitle || "");
+        setBody(data.page.body || local?.body || "");
+        setHeroImage(data.page.hero_image || local?.hero_image || "");
+        setMissing(false);
       } catch {
-        setMissing(true);
+        // API недоступан: остани на локалном fallback-у
+        if (!alive) return;
+        if (!local) setMissing(true);
       }
     })();
 
     return () => {
       alive = false;
     };
-  }, [slug, fallbackTitle]);
+  }, [slug, fallbackTitle, local]);
 
   return (
     <>
@@ -45,8 +54,8 @@ export default function CmsPage({ slug, fallbackTitle }: { slug: string; fallbac
         <Container>
           {missing ? (
             <div className="card">
-              <h2>Садржај није унет</h2>
-              <p>Ова страница је активна, али администратор још није унео садржај у систему.</p>
+              <h2>Садржај није доступан</h2>
+              <p>Нема локалног fallback-а за ову страницу, а CMS садржај није доступан.</p>
             </div>
           ) : (
             <div className="prose" dangerouslySetInnerHTML={{ __html: body }} />
