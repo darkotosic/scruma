@@ -1,35 +1,37 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import CardsGrid from "@/components/CardsGrid";
 import PageHero from "@/components/PageHero";
 import Section from "@/components/Section";
-import CardsGrid from "@/components/CardsGrid";
-import { fetchJson } from "@/lib/api";
-import { FALLBACK_POSTS } from "@/content/fallback";
+import { ApiErrorState } from "@/components/ui/ApiErrorState";
+import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
+import { fetchPosts } from "@/lib/api";
 
 export default function VestiPage() {
-  const [posts, setPosts] = useState<any[]>(FALLBACK_POSTS.filter((p) => p.type === "news"));
-  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState<any[] | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function load() {
+    setErr(null);
+    try {
+      const data = await fetchPosts({ type: "news" });
+      setPosts(data?.items || []);
+    } catch (e: any) {
+      setErr(e?.message || "Грешка при учитавању вести.");
+    }
+  }
 
   useEffect(() => {
-    (async () => {
-      try {
-        const data = await fetchJson<{ items: any[] }>("/api/v1/posts/?type=news");
-        setPosts(data?.items || []);
-      } catch {
-        setPosts(FALLBACK_POSTS.filter((p) => p.type === "news"));
-      } finally {
-        setLoading(false);
-      }
-    })();
+    load();
   }, []);
 
   const newsItems = useMemo(
     () =>
-      posts.map((p: any) => ({
+      (posts || []).map((p: any) => ({
         title: p.title,
         excerpt: p.excerpt || "",
-        href: `/vesti/${p.id || ""}`.trim(),
+        href: `/vesti/detalj/?id=${p.id || ""}`,
         image: p.image || undefined,
         meta: p.published_at ? new Date(p.published_at).toLocaleDateString("sr-RS") : "",
       })),
@@ -40,7 +42,15 @@ export default function VestiPage() {
     <>
       <PageHero title="Вести" subtitle="Најновије информације и саопштења." />
       <Section>
-        {loading ? <p>Учитавање...</p> : newsItems.length ? <CardsGrid items={newsItems} /> : <p>Нема објава.</p>}
+        {err ? (
+          <ApiErrorState title="Вести нису доступне" details={err} onRetry={load} />
+        ) : posts === null ? (
+          <SkeletonBlock className="h-[520px] w-full" />
+        ) : newsItems.length ? (
+          <CardsGrid items={newsItems} />
+        ) : (
+          <p>Садржај није унет у админ панел.</p>
+        )}
       </Section>
     </>
   );
