@@ -16,6 +16,7 @@ export type SiteResponse = {
     hero_title?: string;
     hero_subtitle?: string;
     hero_image?: string;
+    address?: string;
     maps_embed_url?: string;
     footer_text?: string;
     footer_logo?: string;
