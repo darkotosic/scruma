@@ -5,8 +5,5 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# SPA fallback (ако имаш client-side руте)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Next.js static export НЕ СМЕ да има SPA fallback на /index.html.
+# Ако хоћеш да /vesti ради као /vesti/ (trailing slash), то решавамо преко trailingSlash у next.config.js.
