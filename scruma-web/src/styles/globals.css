@@ -107,6 +107,45 @@ nav {
   border-color: color-mix(in srgb, var(--accent) 70%, #000);
 }
 
+
+.breadcrumbs {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 800;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.breadcrumbs-inner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 42px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.breadcrumbs-item {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
+}
+
+.breadcrumbs-item a:hover {
+  color: var(--accent);
+}
+
+.breadcrumbs-item [aria-current='page'] {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.breadcrumbs-separator {
+  margin: 0 6px;
+  opacity: 0.55;
+}
+
 /* Main spacing */
 main {
   min-height: 60vh;

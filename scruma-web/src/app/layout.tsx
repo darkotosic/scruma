@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SiteFavicon from "@/components/SiteFavicon";
 import ClientProviders from "@/context/ClientProviders";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "СЦ Рума",
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ClientProviders>
           <SiteFavicon />
           <Header />
+          <Breadcrumbs />
           <main>{children}</main>
           <Footer />
         </ClientProviders>
