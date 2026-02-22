@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://example-render-api.onrender.com";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://scruma-api.onrender.com";
 
 export const getApiBaseUrl = () => API_BASE_URL;
 
