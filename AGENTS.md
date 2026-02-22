@@ -1,4 +1,4 @@
-# AGENTS.md — Project Operating Rules
+# AGENTS.md — Project Operating Rules (Enterprise Grade)
 
 ## Language & Script Requirements
 - Default user-facing content must be **Serbian Cyrillic**.
@@ -25,11 +25,32 @@
 - Add clear comments only where non-obvious.
 - Avoid breaking existing routes and deployment assumptions.
 
+## Change Management
+- Every change must include a short impact summary (what changed, why, rollback path).
+- Keep pull requests focused and small; avoid mixing refactors with feature work.
+- Preserve backwards compatibility for public routes and API contracts unless explicitly approved.
+
+## Reliability & Operations
+- Treat deployment configuration as production-critical; validate changes to `.cpanel.yml` and Render settings.
+- Fail gracefully when API data is unavailable (status display only, no hidden local content source).
+- Prioritize deterministic builds and reproducible deploy steps across environments.
+
+## Security & Compliance
+- Never commit secrets, access tokens, or environment-specific credentials.
+- Prefer environment variables for sensitive configuration.
+- Avoid introducing third-party dependencies without a clear need and maintenance signal.
+
+## Quality Gates
+- Run relevant lint/build checks for touched areas before finalizing.
+- Document any skipped checks with a concrete reason.
+- Keep changes reviewable: meaningful commit message and clear PR description.
+
 ## Acceptance Criteria
 - `scruma-web/out/` contains a fully working static site.
 - `.cpanel.yml` successfully deploys to `public_html`.
 - Render deploys `scruma-api` with migrations + static collection.
 - Admin can manage: announcements, match previews, and page content.
+- Changes include a rollback-safe path and no secret leakage.
 
 
 ## CMS политика
