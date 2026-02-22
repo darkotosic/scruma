@@ -2,14 +2,12 @@
 
 import { useEffect, useState } from 'react';
 
-import Accordion from '@/components/Accordion';
 import CardGrid from '@/components/CardGrid';
 import Container from '@/components/Container';
-import GalleryGrid from '@/components/GalleryGrid';
 import Hero from '@/components/Hero';
 import SectionHeader from '@/components/SectionHeader';
-import { HOME } from '@/lib/content';
-import { fetchHome } from '@/lib/homeApi';
+import { fetchJson } from '@/lib/api';
+import { fetchSite } from '@/lib/cmsApi';
 
 function mapPostsToCards(posts: any[]) {
   return posts.map((p) => ({
@@ -22,34 +20,49 @@ function mapPostsToCards(posts: any[]) {
 }
 
 export default function HomePage() {
-  const [hero, setHero] = useState(HOME.hero);
-  const [obavestenja, setObavestenja] = useState(HOME.obavestenja);
-  const [vesti, setVesti] = useState(HOME.vesti);
-  const [sportskeVesti, setSportskeVesti] = useState(HOME.sportskeVesti);
-  const [mapsEmbedUrl, setMapsEmbedUrl] = useState<string>('');
+  const [hero, setHero] = useState({ title: '', subtitle: '', image: '', ctas: [] as any[] });
+  const [obavestenja, setObavestenja] = useState<any[]>([]);
+  const [vesti, setVesti] = useState<any[]>([]);
+  const [sportskeVesti, setSportskeVesti] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let alive = true;
 
     (async () => {
-      const payload = await fetchHome();
-      if (!alive) return;
+      try {
+        const [siteData, announcementsData, newsData, sportsData] = await Promise.all([
+          fetchSite(),
+          fetchJson<{ items: any[] }>('/api/v1/announcements/'),
+          fetchJson<{ items: any[] }>('/api/v1/posts/?type=news'),
+          fetchJson<{ items: any[] }>('/api/v1/posts/?type=sport'),
+        ]);
+        if (!alive) return;
 
-      const settings = payload?.settings ?? null;
-      const announcements = payload?.announcements ?? [];
-      const posts = payload?.posts ?? [];
+        const settings = siteData?.settings;
+        setHero({
+          title: settings?.hero_title || 'Садржај није унет',
+          subtitle:
+            settings?.hero_subtitle ||
+            'Администратор још није унео податке за почетну страницу.',
+          image: settings?.hero_image || '',
+          ctas: [],
+        });
 
-      setHero({
-        title: settings?.hero_title || HOME.hero.title,
-        subtitle: settings?.hero_subtitle || HOME.hero.subtitle,
-        image: settings?.hero_image || HOME.hero.image,
-        ctas: HOME.hero.ctas,
-      });
-
-      setObavestenja(mapPostsToCards(announcements));
-      setVesti(mapPostsToCards(posts));
-      setSportskeVesti(HOME.sportskeVesti);
-      setMapsEmbedUrl(settings?.maps_embed_url || '');
+        setObavestenja(mapPostsToCards(announcementsData?.items || []));
+        setVesti(mapPostsToCards(newsData?.items || []));
+        setSportskeVesti(mapPostsToCards(sportsData?.items || []));
+      } catch {
+        if (!alive) return;
+        setHero({
+          title: 'Садржај није унет',
+          subtitle: 'Администратор још није унео податке за почетну страницу.',
+          image: '',
+          ctas: [],
+        });
+      } finally {
+        if (alive) setLoading(false);
+      }
     })();
 
     return () => {
@@ -63,54 +76,22 @@ export default function HomePage() {
 
       <section className="pageSection">
         <Container>
-          <SectionHeader
-            title="Обавештења"
-            subtitle="Најважније информације — приоритетна обавештења и измене режима рада."
-          />
-          <CardGrid items={obavestenja} />
+          <SectionHeader title="Обавештења" subtitle="Најважније информације." />
+          {obavestenja.length ? <CardGrid items={obavestenja} /> : <p>{loading ? 'Учитавање...' : 'Садржај још није унет.'}</p>}
         </Container>
       </section>
 
       <section className="pageSection">
         <Container>
-          <SectionHeader title="Вести" subtitle="Најновија дешавања у Спортском центру." />
-          <CardGrid items={vesti} />
+          <SectionHeader title="Вести" subtitle="Најновија дешавања." />
+          {vesti.length ? <CardGrid items={vesti} /> : <p>{loading ? 'Учитавање...' : 'Садржај још није унет.'}</p>}
         </Container>
       </section>
 
       <section className="pageSection">
         <Container>
           <SectionHeader title="Спортске вести" subtitle="Резултати, најаве и локални спорт." />
-          <CardGrid items={sportskeVesti} />
-        </Container>
-      </section>
-
-      <section className="pageSection">
-        <Container>
-          <SectionHeader title="Слике" subtitle="Издвојене фотографије — ускоро више у Галерији." />
-          <GalleryGrid images={HOME.slike} />
-        </Container>
-      </section>
-
-      <section className="pageSection">
-        <Container>
-          <SectionHeader title="Како до нас?" subtitle="Брзе информације за посетиоце." />
-          <Accordion items={HOME.kakoDoNas} />
-
-          {mapsEmbedUrl ? (
-            <div style={{ marginTop: 16 }}>
-              <iframe
-                title="Гугл мапа"
-                src={mapsEmbedUrl}
-                width="100%"
-                height="380"
-                loading="lazy"
-                style={{ border: 0, borderRadius: 14 }}
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
-              />
-            </div>
-          ) : null}
+          {sportskeVesti.length ? <CardGrid items={sportskeVesti} /> : <p>{loading ? 'Учитавање...' : 'Садржај још није унет.'}</p>}
         </Container>
       </section>
     </>

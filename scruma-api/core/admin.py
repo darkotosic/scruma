@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Announcement, FooterColumn, FooterLink, Post, SiteSettings
+from .models import Announcement, FooterColumn, FooterLink, Page, Post, SiteSettings
 
 
 class FooterColumnInline(admin.TabularInline):
@@ -47,3 +47,11 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ("type", "title", "is_published", "published_at")
     list_filter = ("type", "is_published")
     search_fields = ("title", "excerpt", "body")
+
+
+@admin.register(Page)
+class PageAdmin(admin.ModelAdmin):
+    list_display = ("slug", "title", "show_in_nav", "nav_order", "updated_at")
+    list_filter = ("show_in_nav",)
+    search_fields = ("slug", "title", "subtitle", "body", "seo_title", "seo_description")
+    ordering = ("nav_order", "id")

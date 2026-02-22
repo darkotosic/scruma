@@ -42,3 +42,8 @@
 - `pip install -r requirements.txt`
 - `python manage.py migrate`
 - `python manage.py runserver`
+
+
+## CMS извор истине
+- Frontend садржај се учитава искључиво преко API (`/api/v1/...`), без локалног fallback садржаја.
+- Када CMS садржај није унет, странице приказују статусну поруку „Садржај још није унет“.

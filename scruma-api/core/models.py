@@ -4,6 +4,7 @@ from django.db import models
 class Announcement(models.Model):
     title = models.CharField(max_length=200)
     body = models.TextField()
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -30,6 +31,8 @@ class SiteSettings(models.Model):
     )
 
     footer_text = models.CharField(max_length=200, blank=True, default="")
+    footer_logo = models.ImageField(upload_to="site/", blank=True, null=True)
+    footer_bottom_text = models.CharField(max_length=220, blank=True, default="")
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
@@ -101,3 +104,26 @@ class Post(models.Model):
 
     def __str__(self) -> str:
         return f"{self.get_type_display()}: {self.title}"
+
+
+class Page(models.Model):
+    slug = models.CharField("Slug (путања)", max_length=200, unique=True)
+    title = models.CharField("Наслов", max_length=200, blank=True, default="")
+    subtitle = models.TextField("Поднаслов", blank=True, default="")
+    body = models.TextField("Садржај", blank=True, default="")
+
+    hero_image = models.ImageField("Херо слика", upload_to="pages/", blank=True, null=True)
+
+    seo_title = models.CharField("SEO наслов", max_length=200, blank=True, default="")
+    seo_description = models.CharField("SEO опис", max_length=260, blank=True, default="")
+
+    show_in_nav = models.BooleanField("Прикажи у навигацији", default=True)
+    nav_order = models.PositiveIntegerField("Редослед у навигацији", default=0)
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["nav_order", "id"]
+
+    def __str__(self) -> str:
+        return self.slug
