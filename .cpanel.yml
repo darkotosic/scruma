@@ -1,12 +1,21 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/digita28/public_html/
+    - export DEPLOYPATH=/home/digita28/public_html
     - export REPOPATH=$(pwd)
-    - export SOURCEPATH="$REPOPATH/scruma-web/out/"
+    - export SOURCEPATH="$REPOPATH/scruma-web/out"
     - echo "REPOPATH=$REPOPATH"
     - echo "SOURCEPATH=$SOURCEPATH"
     - if [ ! -d "$SOURCEPATH" ]; then echo "SOURCEPATH не постоји: $SOURCEPATH" && exit 1; fi
     - if [ ! -f "$SOURCEPATH/index.html" ]; then echo "index.html не постоји у: $SOURCEPATH" && exit 1; fi
-    - /usr/bin/rsync -a --delete "$SOURCEPATH" "$DEPLOYPATH"
+
+    # (Опционо, али препоручено) сачувај .well-known ако постоји
+    - if [ -d "$DEPLOYPATH/.well-known" ]; then /bin/mkdir -p /home/digita28/_deploy_backup && /bin/cp -a "$DEPLOYPATH/.well-known" /home/digita28/_deploy_backup/.well-known; fi
+
+    # Копирај САДРЖАЈ out/ директно у public_html/
+    - /usr/bin/rsync -a --delete "$SOURCEPATH/" "$DEPLOYPATH/"
+
+    # Врати .well-known ако је био присутан
+    - if [ -d /home/digita28/_deploy_backup/.well-known ]; then /usr/bin/rsync -a /home/digita28/_deploy_backup/.well-known/ "$DEPLOYPATH/.well-known/"; fi
+
     - echo "deploy $(date)" > "$DEPLOYPATH/deploy.txt"
