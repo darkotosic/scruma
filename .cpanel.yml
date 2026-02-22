@@ -1,17 +1,6 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/digita28/public_html/
-    - export REPOPATH=$(pwd)
-    - export SOURCEPATH="$REPOPATH/scruma-web/out"
-
-    - echo "TASK-RUN $(date)" > "$DEPLOYPATH/task-ran-pre.txt"
-
-    - echo "REPOPATH=$REPOPATH"
-    - echo "SOURCEPATH=$SOURCEPATH"
-    - if [ ! -d "$SOURCEPATH" ]; then echo "SOURCEPATH не постоји: $SOURCEPATH" && exit 1; fi
-    - if [ ! -f "$SOURCEPATH/index.html" ]; then echo "index.html не постоји у: $SOURCEPATH" && exit 1; fi
-
-    - /usr/bin/rsync -a --delete "$SOURCEPATH/" "$DEPLOYPATH/"
-
-    - echo "DEPLOY-OK $(date)" > "$DEPLOYPATH/deploy.txt"
+    - echo "CPANEL TASK START $(date)" > /home/digita28/public_html/cpanel-test.txt
+    - /usr/bin/rsync -a --delete /home/digita28/repositories/scruma/scruma-web/out/ /home/digita28/public_html/
+    - echo "DEPLOY DONE $(date)" > /home/digita28/public_html/deploy.txt
