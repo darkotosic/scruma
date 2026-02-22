@@ -1,2 +1,6 @@
 .next/
 node_modules/
+
+# локалне env вредности (не комитују се)
+.env.local
+.env.*.local
