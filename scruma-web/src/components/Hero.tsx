@@ -18,6 +18,11 @@ export default function Hero({
   ctas: Cta[];
 }) {
   const { t } = useScript();
+  const normalizedSubtitle = subtitle
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .trim();
+
   return (
     <section className="hero" aria-label={t('Херо секција')}>
       <div className="heroMedia" style={{ backgroundImage: `url(${image})` }} />
@@ -25,7 +30,7 @@ export default function Hero({
       <Container>
         <div className="heroContent">
           <h1 className="heroTitle">{t(title)}</h1>
-          <p className="heroSubtitle">{t(subtitle)}</p>
+          {normalizedSubtitle ? <p className="heroSubtitle">{t(normalizedSubtitle)}</p> : null}
 
           <div className="heroCtas">
             {ctas.map((c) => (
