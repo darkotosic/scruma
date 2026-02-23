@@ -28,6 +28,7 @@ export default function Header() {
   ];
 
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [facebookIconUrl, setFacebookIconUrl] = useState<string | null>(null);
   const [siteError, setSiteError] = useState(false);
 
   useEffect(() => {
@@ -46,10 +47,12 @@ export default function Header() {
         if (!alive) return;
 
         setLogoUrl(site.logo || null);
+        setFacebookIconUrl(site.social_facebook_icon || null);
       } catch {
         if (!alive) return;
         setSiteError(true);
         setLogoUrl(null);
+        setFacebookIconUrl(null);
       }
     })();
 
@@ -106,7 +109,15 @@ export default function Header() {
               className="glass-btn"
               aria-label={t("Фејсбук")}
             >
-              📘
+              {facebookIconUrl ? (
+                <img
+                  src={facebookIconUrl}
+                  alt={t("Фејсбук")}
+                  className="social-icon"
+                />
+              ) : (
+                "📘"
+              )}
             </a>
           </div>
 
@@ -164,7 +175,15 @@ export default function Header() {
               className="glass-btn"
               aria-label={t("Фејсбук")}
             >
-              📘
+              {facebookIconUrl ? (
+                <img
+                  src={facebookIconUrl}
+                  alt={t("Фејсбук")}
+                  className="social-icon"
+                />
+              ) : (
+                "📘"
+              )}
             </a>
           </div>
         </aside>

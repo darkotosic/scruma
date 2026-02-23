@@ -147,6 +147,7 @@ class V1SiteView(View):
                     "site_name": s.site_name,
                     "logo": _abs_media(request, s.logo.url) if s.logo else "",
                     "favicon": _abs_media(request, s.favicon.url) if s.favicon else "",
+                    "social_facebook_icon": _abs_media(request, s.social_facebook_icon.url) if s.social_facebook_icon else "",
                     "hero_title": s.hero_title,
                     "hero_subtitle": s.hero_subtitle,
                     "hero_image": _abs_media(request, s.hero_image.url) if s.hero_image else "",
