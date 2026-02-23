@@ -407,6 +407,9 @@ footer {
 .nav-logo {
   height: 55px;
   width: auto;
+  max-width: 48vw;
+  object-fit: contain;
+  display: block;
   transition: transform 0.3s ease;
 }
 
@@ -689,6 +692,9 @@ body.dark .navbar.scrolled .nav-burger span {
 .nav-mobile-logo img {
   height: 44px;
   width: auto;
+  max-width: 60vw;
+  object-fit: contain;
+  display: block;
 }
 
 .nav-mobile-close {
@@ -706,15 +712,18 @@ body.dark .navbar.scrolled .nav-burger span {
 .nav-mobile-links {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding-top: 6px;
+  gap: 10px;
+  padding-top: 10px;
 }
 
 .nav-mobile-links a {
-  padding: 12px 12px;
-  border-radius: 14px;
+  padding: 14px 14px;
+  border-radius: 16px;
   color: var(--text);
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1.15;
+  letter-spacing: 0.2px;
 }
 
 .nav-mobile-links a:hover {
@@ -742,6 +751,27 @@ body.dark .navbar.scrolled .nav-burger span {
   gap: 10px;
 }
 
+/* ===== MOBILE: CTA DUGMAD U DRAWER-U (čitljivo na svetloj temi) ===== */
+
+.nav-mobile-drawer .glass-btn {
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-shadow: none;
+}
+
+:root[data-theme='light'] .nav-mobile-drawer .glass-btn,
+body.light .nav-mobile-drawer .glass-btn {
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  text-shadow:
+    1px 0 0 rgba(255, 255, 255, 0.65),
+   -1px 0 0 rgba(255, 255, 255, 0.65),
+    0 1px 0 rgba(255, 255, 255, 0.65),
+    0 -1px 0 rgba(255, 255, 255, 0.65),
+    0 0 1px rgba(0, 0, 0, 0.35);
+}
+
 /* ===== RESPONSIVE ===== */
 
 @media (max-width: 900px) {
@@ -758,6 +788,11 @@ body.dark .navbar.scrolled .nav-burger span {
 
   .nav-shell {
     padding: 0 16px;
+  }
+
+  .nav-logo {
+    height: 44px;
+    max-width: 56vw;
   }
 }
 
