@@ -41,7 +41,7 @@ export default function Header() {
   const [siteError, setSiteError] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 80);
+    const onScroll = () => setIsScrolled(window.scrollY > 16);
     onScroll();
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
