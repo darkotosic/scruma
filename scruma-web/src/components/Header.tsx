@@ -18,7 +18,16 @@ export default function Header() {
   const navItems = [
     { href: "/", label: "Насловна" },
     { href: "/velika-sala", label: "Велика сала (спортска хала)" },
-    { href: "/sale", label: "Сале" },
+    {
+      href: "/sale",
+      label: "Сале",
+      children: [
+        { href: "/sale/dzudo-sala", label: "Џудо сала" },
+        { href: "/sale/plava-sala", label: "Плава сала (кик бокс и рехаб)" },
+        { href: "/sale/crvena-sala", label: "Црвена сала (карате и фитнес)" },
+        { href: "/sale/mala-sala", label: "Мала сала (савате бокс, теквондо)" },
+      ],
+    },
     { href: "/kuglana", label: "Куглана" },
     { href: "/teretana", label: "Теретана" },
     { href: "/bazen-borkovac", label: "Базен Борковац" },
@@ -85,9 +94,24 @@ export default function Header() {
 
           <nav className="nav-links" aria-label={t("Главна навигација")}>
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href}>
-                {t(item.label)}
-              </Link>
+              item.children ? (
+                <div key={item.href} className="nav-dropdown">
+                  <Link href={item.href} className="nav-dropdown-trigger" aria-haspopup="true">
+                    {t(item.label)}
+                  </Link>
+                  <div className="nav-dropdown-menu" aria-label={t("Подмени сала")}>
+                    {item.children.map((child) => (
+                      <Link key={child.href} href={child.href}>
+                        {t(child.label)}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <Link key={item.href} href={item.href}>
+                  {t(item.label)}
+                </Link>
+              )
             ))}
           </nav>
 
@@ -148,9 +172,20 @@ export default function Header() {
 
           <nav className="nav-mobile-links" aria-label={t("Навигација")}>
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
-                {t(item.label)}
-              </Link>
+              <div key={item.href}>
+                <Link href={item.href} onClick={() => setMenuOpen(false)}>
+                  {t(item.label)}
+                </Link>
+                {item.children?.length ? (
+                  <div className="nav-mobile-submenu">
+                    {item.children.map((child) => (
+                      <Link key={child.href} href={child.href} onClick={() => setMenuOpen(false)}>
+                        {t(child.label)}
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
             ))}
           </nav>
 
