@@ -18,6 +18,7 @@ class SiteSettings(models.Model):
     site_name = models.CharField(max_length=120, default="СЦ Рума")
     logo = models.ImageField(upload_to="site/", blank=True, null=True)
     favicon = models.ImageField(upload_to="site/", blank=True, null=True)
+    social_facebook_icon = models.ImageField(upload_to="site/", blank=True, null=True)
     hero_title = models.CharField(max_length=160, default="Спортски центар Рума")
     hero_subtitle = models.TextField(blank=True, default="")
     hero_image = models.ImageField(upload_to="site/", blank=True, null=True)

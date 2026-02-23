@@ -51,7 +51,7 @@ class SiteSettingsAdmin(SCEditorAdminMixin, admin.ModelAdmin):
     inlines = [FooterColumnInline]
     fieldsets = (
         ("Основно", {"fields": ("site_name", "address")}),
-        ("Брендинг", {"fields": ("logo", "favicon")}),
+        ("Брендинг", {"fields": ("logo", "favicon", "social_facebook_icon")}),
         ("Херо", {"fields": ("hero_title", "hero_subtitle", "hero_image")}),
         ("Мапа", {"fields": ("maps_embed_url",)}),
         ("Футер", {"fields": ("footer_text", "footer_logo", "footer_bottom_text")}),

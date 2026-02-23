@@ -17,6 +17,7 @@ export type SiteResponse = {
     site_name?: string;
     logo?: string;
     favicon?: string;
+    social_facebook_icon?: string;
     hero_title?: string;
     hero_subtitle?: string;
     hero_image?: string;
