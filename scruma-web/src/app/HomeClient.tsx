@@ -66,6 +66,10 @@ export default function HomeClient() {
   }
 
   const settings = data.site?.settings || {};
+  const mapEmbedUrl =
+    settings.maps_embed_url ||
+    "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d22567.7847435543!2d19.8105812!3d45.0051683!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x475babf00502b12f%3A0xa91ad9140edc7e6a!2z0KHQv9C-0YDRgtGB0LrQviDQv9C-0YHQu9C-0LLQvdC4INGG0LXQvdGC0LDRgA!5e0!3m2!1sen!2srs!4v1771831310325!5m2!1sen!2srs";
+  const mapFallbackUrl = "https://maps.google.com/?q=45.0051683,19.8105812";
   const announcements = mapPostsToCards(data.announcements?.items || [], (p) => `/obavestenja/detalj/?id=${p.id}`);
   const news = mapPostsToCards(data.news?.items || [], (p) => `/vesti/detalj/?id=${p.id}`);
   const sports = mapPostsToCards(data.sport?.items || [], (p) => `/dogadjaji/detalj/?id=${p.id}`);
@@ -101,11 +105,18 @@ export default function HomeClient() {
 
           <div className="map-wrapper">
             <iframe
-              src="https://www.google.com/maps/embed?pb=..."
+              src={mapEmbedUrl}
               loading="lazy"
               allowFullScreen
             ></iframe>
           </div>
+          <p>
+            Ако се мапа не учита, отворите локацију директно:&nbsp;
+            <a href={mapFallbackUrl} target="_blank" rel="noopener noreferrer">
+              Отвори у Google мапама
+            </a>
+            .
+          </p>
         </Container>
       </section>
 
