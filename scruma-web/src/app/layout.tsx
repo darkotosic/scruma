@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ClientProviders>
           <SiteFavicon />
           <Header />
-          <main>{children}</main>
+          <main className="page-content">{children}</main>
           <Footer />
           <BackToTopButton />
         </ClientProviders>

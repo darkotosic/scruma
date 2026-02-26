@@ -7,6 +7,15 @@
   --accent: #2f67ff;
   --shadow: 0 12px 28px rgba(0, 0, 0, 0.10);
   --nav-h: 90px;
+  --navbar-height: 96px; /* desktop */
+}
+
+
+
+@media (max-width: 900px) {
+  :root {
+    --navbar-height: 84px; /* мобилни/таб */
+  }
 }
 
 :root[data-theme='dark'] {
@@ -110,7 +119,10 @@ nav {
 /* Main spacing */
 main {
   min-height: 60vh;
-  padding-top: var(--nav-h);
+}
+
+.page-content {
+  padding-top: var(--navbar-height);
 }
 
 .pageSection {
@@ -131,7 +143,7 @@ main {
   height: 100vh;
   min-height: 560px;
   overflow: hidden;
-  margin-top: calc(-1 * var(--nav-h));
+  margin-top: calc(-1 * var(--navbar-height));
 }
 
 .heroMedia {
@@ -384,6 +396,21 @@ footer {
   backdrop-filter: blur(16px) saturate(1.05);
   box-shadow: 0 8px 30px rgba(73, 58, 35, 0.12);
   border-bottom-color: rgba(255, 250, 240, 0.92);
+}
+
+
+@media (min-width: 901px) {
+  .navbar.scrolled {
+    background: rgba(255, 253, 247, 0.94);
+    backdrop-filter: blur(18px) saturate(1.1);
+    border-bottom-color: rgba(255, 250, 240, 0.98);
+  }
+
+  :root[data-theme='dark'] .navbar.scrolled,
+  body.dark .navbar.scrolled {
+    background: rgba(18, 18, 18, 0.92);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
 }
 
 .nav-shell {
