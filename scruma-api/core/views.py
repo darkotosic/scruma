@@ -2,7 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from django.views import View
 
-from .models import Announcement, Page, Post, SiteSettings
+from .models import Page, Post, SiteSettings
 
 
 class HomeStatusView(View):
@@ -67,7 +67,11 @@ class V1PostsView(View):
     def get(self, request):
         qs = Post.objects.filter(is_published=True).order_by("-published_at")
         ptype = (request.GET.get("type") or "").strip()
-        limit = int(request.GET.get("limit") or 100)
+        try:
+            limit = int(request.GET.get("limit") or 100)
+        except (TypeError, ValueError):
+            limit = 100
+        limit = max(1, min(limit, 100))
         if ptype:
             qs = qs.filter(type=ptype)
 
@@ -82,7 +86,7 @@ class V1PostsView(View):
                 "image": _abs_media(request, p.image.url) if p.image else "",
                 "published_at": p.published_at.isoformat() if p.published_at else "",
             }
-            for p in qs[: max(1, min(limit, 100))]
+            for p in qs[:limit]
         ]
         return JsonResponse({"items": items})
 
@@ -110,18 +114,21 @@ class V1PostDetailView(View):
 
 class V1AnnouncementsView(View):
     def get(self, request):
-        qs = Announcement.objects.filter(is_active=True).order_by("-created_at")[:100]
+        qs = Post.objects.filter(is_published=True, type=Post.TYPE_NOTICE).order_by("-published_at")[:100]
         return JsonResponse(
             {
                 "items": [
                     {
-                        "id": a.id,
-                        "title": a.title,
-                        "body": a.body,
-                        "created_at": a.created_at.isoformat(),
-                        "is_active": a.is_active,
+                        "id": p.id,
+                        "type": p.type,
+                        "title": p.title,
+                        "excerpt": p.excerpt,
+                        "body": p.body,
+                        "body_html": p.body,
+                        "image": _abs_media(request, p.image.url) if p.image else "",
+                        "published_at": p.published_at.isoformat() if p.published_at else "",
                     }
-                    for a in qs
+                    for p in qs
                 ]
             }
         )

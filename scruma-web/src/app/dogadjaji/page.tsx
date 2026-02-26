@@ -7,6 +7,7 @@ import Section from "@/components/Section";
 import { ApiErrorState } from "@/components/ui/ApiErrorState";
 import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
 import { fetchPosts } from "@/lib/api";
+import { toPreviewText } from "@/lib/normalizeContent";
 
 export default function DogadjajiPage() {
   const [posts, setPosts] = useState<any[] | null>(null);
@@ -38,7 +39,7 @@ export default function DogadjajiPage() {
           <CardsGrid
             items={posts.map((p) => ({
               title: p.title,
-              excerpt: p.excerpt,
+              excerpt: toPreviewText(p.excerpt || p.body || p.body_html || ""),
               image: p.image,
               href: `/dogadjaji/detalj/?id=${p.id}`,
               meta: p.published_at ? new Date(p.published_at).toLocaleDateString("sr-RS") : "",

@@ -126,7 +126,5 @@ export function fetchPostById(id: string) {
 }
 
 export function fetchAnnouncements() {
-  return fetchJson<{ items: { id: string; title: string; body: string; created_at?: string }[] }>(
-    "/api/v1/announcements/"
-  );
+  return fetchJson<PostsResponse>("/api/v1/announcements/");
 }

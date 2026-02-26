@@ -45,8 +45,18 @@ class SCEditorAdminMixin:
 
 @admin.register(Announcement)
 class AnnouncementAdmin(SCEditorAdminMixin, admin.ModelAdmin):
-    list_display = ("title", "created_at")
+    list_display = ("title", "created_at", "deprecated_status")
     search_fields = ("title", "body")
+
+    @admin.display(description="Статус")
+    def deprecated_status(self, _obj):
+        return "DEPRECATED"
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(SiteSettings)
