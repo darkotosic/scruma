@@ -4,6 +4,10 @@ from django.db import models
 
 from .models import Announcement, FooterColumn, FooterLink, Page, Post, SiteSettings
 
+admin.site.site_header = "Спортски центар Рума - Администрација"
+admin.site.site_title = "Спортски центар Рума - Администрација"
+admin.site.index_title = "Администрација"
+
 
 class FooterColumnInline(admin.TabularInline):
     model = FooterColumn

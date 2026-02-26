@@ -2,12 +2,14 @@ from django.db import models
 
 
 class Announcement(models.Model):
-    title = models.CharField(max_length=200)
-    body = models.TextField()
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    title = models.CharField("Наслов", max_length=200)
+    body = models.TextField("Садржај")
+    is_active = models.BooleanField("Активно", default=True)
+    created_at = models.DateTimeField("Креирано", auto_now_add=True)
 
     class Meta:
+        verbose_name = "Обавештење"
+        verbose_name_plural = "Обавештења"
         ordering = ["-created_at"]
 
     def __str__(self) -> str:
@@ -15,34 +17,43 @@ class Announcement(models.Model):
 
 
 class SiteSettings(models.Model):
-    site_name = models.CharField(max_length=120, default="СЦ Рума")
-    logo = models.ImageField(upload_to="site/", blank=True, null=True)
-    favicon = models.ImageField(upload_to="site/", blank=True, null=True)
-    social_facebook_icon = models.ImageField(upload_to="site/", blank=True, null=True)
-    hero_title = models.CharField(max_length=160, default="Спортски центар Рума")
-    hero_subtitle = models.TextField(blank=True, default="")
-    hero_image = models.ImageField(upload_to="site/", blank=True, null=True)
+    site_name = models.CharField("Назив сајта", max_length=120, default="СЦ Рума")
+    logo = models.ImageField("Лого", upload_to="site/", blank=True, null=True)
+    favicon = models.ImageField("Фавикон", upload_to="site/", blank=True, null=True)
+    social_facebook_icon = models.ImageField(
+        "Иконица за Фејсбук",
+        upload_to="site/",
+        blank=True,
+        null=True,
+    )
+    hero_title = models.CharField("Херо наслов", max_length=160, default="Спортски центар Рума")
+    hero_subtitle = models.TextField("Херо поднаслов", blank=True, default="")
+    hero_image = models.ImageField("Херо слика", upload_to="site/", blank=True, null=True)
     address = models.CharField(
         "Адреса",
         max_length=200,
         blank=True,
-        default="Veljka Dugoševića 100, Ruma",
+        default="Вељка Дугошевића 100, Рума",
     )
 
     maps_embed_url = models.CharField(
-        "Уграђена мапа (URL)",
+        "Уграђена мапа (УРЛ)",
         max_length=600,
         blank=True,
         default="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2106.4186091167267!2d19.816897856951133!3d45.00865869273741!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x475babf00502b12f%3A0xa91ad9140edc7e6a!2z0KHQv9C-0YDRgtGB0LrQviDQv9C-0YHQu9C-0LLQvdC4INGG0LXQvdGC0LDRgA!5e1!3m2!1sen!2srs!4v1771758999050!5m2!1sen!2srs",
     )
 
-    footer_text = models.CharField(max_length=200, blank=True, default="")
-    footer_logo = models.ImageField(upload_to="site/", blank=True, null=True)
-    footer_bottom_text = models.CharField(max_length=220, blank=True, default="")
-    updated_at = models.DateTimeField(auto_now=True)
+    footer_text = models.CharField("Текст у футеру", max_length=200, blank=True, default="")
+    footer_logo = models.ImageField("Лого у футеру", upload_to="site/", blank=True, null=True)
+    footer_bottom_text = models.CharField("Доњи текст у футеру", max_length=220, blank=True, default="")
+    updated_at = models.DateTimeField("Ажурирано", auto_now=True)
+
+    class Meta:
+        verbose_name = "Подешавања сајта"
+        verbose_name_plural = "Подешавања сајта"
 
     def __str__(self) -> str:
-        return "SiteSettings"
+        return "Подешавања сајта"
 
 
 # ✅ Нови модели испод SiteSettings
@@ -96,16 +107,18 @@ class Post(models.Model):
         (TYPE_SPORT, "Спортске вести"),
     ]
 
-    type = models.CharField(max_length=20, choices=TYPE_CHOICES)
-    title = models.CharField(max_length=220)
-    excerpt = models.TextField(blank=True, default="")
-    body = models.TextField(blank=True, default="")
-    image = models.ImageField(upload_to="posts/", blank=True, null=True)
-    link_url = models.URLField(blank=True, default="")
-    is_published = models.BooleanField(default=True)
-    published_at = models.DateTimeField(auto_now_add=True)
+    type = models.CharField("Тип", max_length=20, choices=TYPE_CHOICES)
+    title = models.CharField("Наслов", max_length=220)
+    excerpt = models.TextField("Сажетак", blank=True, default="")
+    body = models.TextField("Садржај", blank=True, default="")
+    image = models.ImageField("Слика", upload_to="posts/", blank=True, null=True)
+    link_url = models.URLField("Линк", blank=True, default="")
+    is_published = models.BooleanField("Објављено", default=True)
+    published_at = models.DateTimeField("Датум објаве", auto_now_add=True)
 
     class Meta:
+        verbose_name = "Објава"
+        verbose_name_plural = "Објаве"
         ordering = ["-published_at"]
 
     def __str__(self) -> str:
@@ -113,22 +126,24 @@ class Post(models.Model):
 
 
 class Page(models.Model):
-    slug = models.CharField("Slug (путања)", max_length=200, unique=True)
+    slug = models.CharField("Слаг (путања)", max_length=200, unique=True)
     title = models.CharField("Наслов", max_length=200, blank=True, default="")
     subtitle = models.TextField("Поднаслов", blank=True, default="")
     body = models.TextField("Садржај", blank=True, default="")
 
     hero_image = models.ImageField("Херо слика", upload_to="pages/", blank=True, null=True)
 
-    seo_title = models.CharField("SEO наслов", max_length=200, blank=True, default="")
-    seo_description = models.CharField("SEO опис", max_length=260, blank=True, default="")
+    seo_title = models.CharField("СЕО наслов", max_length=200, blank=True, default="")
+    seo_description = models.CharField("СЕО опис", max_length=260, blank=True, default="")
 
     show_in_nav = models.BooleanField("Прикажи у навигацији", default=True)
     nav_order = models.PositiveIntegerField("Редослед у навигацији", default=0)
 
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField("Ажурирано", auto_now=True)
 
     class Meta:
+        verbose_name = "Страница"
+        verbose_name_plural = "Странице"
         ordering = ["nav_order", "id"]
 
     def __str__(self) -> str:
