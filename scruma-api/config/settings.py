@@ -80,7 +80,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-LANGUAGE_CODE = "sr"
+LANGUAGE_CODE = "sr-cyrl"
 TIME_ZONE = "Europe/Belgrade"
 USE_I18N = True
 USE_TZ = True
