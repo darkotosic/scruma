@@ -6,7 +6,8 @@ import PageHero from "@/components/PageHero";
 import Section from "@/components/Section";
 import { ApiErrorState } from "@/components/ui/ApiErrorState";
 import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
-import { fetchAnnouncements } from "@/lib/api";
+import { fetchPosts } from "@/lib/api";
+import { toPreviewText } from "@/lib/normalizeContent";
 
 export default function ObavestenjaPage() {
   const [items, setItems] = useState<any[] | null>(null);
@@ -15,7 +16,7 @@ export default function ObavestenjaPage() {
   async function load() {
     setErr(null);
     try {
-      const data = await fetchAnnouncements();
+      const data = await fetchPosts({ type: "notice" });
       setItems(data.items || []);
     } catch (e: any) {
       setErr(e?.message || "Грешка при учитавању обавештења.");
@@ -38,9 +39,9 @@ export default function ObavestenjaPage() {
           <CardsGrid
             items={items.map((p) => ({
               title: p.title,
-              excerpt: p.body,
+              excerpt: toPreviewText(p.excerpt || p.body || p.body_html || ""),
               href: `/obavestenja/detalj/?id=${p.id}`,
-              meta: p.created_at ? new Date(p.created_at).toLocaleDateString("sr-RS") : "",
+              meta: p.published_at ? new Date(p.published_at).toLocaleDateString("sr-RS") : "",
             }))}
           />
         ) : (

@@ -7,6 +7,7 @@ import Section from "@/components/Section";
 import { ApiErrorState } from "@/components/ui/ApiErrorState";
 import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
 import { fetchPosts } from "@/lib/api";
+import { toPreviewText } from "@/lib/normalizeContent";
 
 export default function VestiPage() {
   const [posts, setPosts] = useState<any[] | null>(null);
@@ -30,7 +31,7 @@ export default function VestiPage() {
     () =>
       (posts || []).map((p: any) => ({
         title: p.title,
-        excerpt: p.excerpt || "",
+        excerpt: toPreviewText(p.excerpt || p.body || p.body_html || ""),
         href: `/vesti/detalj/?id=${p.id || ""}`,
         image: p.image || undefined,
         meta: p.published_at ? new Date(p.published_at).toLocaleDateString("sr-RS") : "",
