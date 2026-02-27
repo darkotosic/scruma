@@ -942,46 +942,70 @@ body {
 }
 
 .footer {
-  background: #0f172a;
+  background: linear-gradient(180deg, #0b1220 0%, #111d35 100%);
   color: #fff;
-  padding: 60px 20px;
-  text-align: center;
+  padding: 56px 20px 24px;
 }
 
 .footer-inner {
   max-width: 1200px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
-.footer-logo {
-  margin-bottom: 30px;
+.footer-brand h3,
+.footer-links h4,
+.footer-contact h4 {
+  margin: 0 0 12px;
+}
+
+.footer-brand p,
+.footer-contact p {
+  margin: 0 0 8px;
+  opacity: 0.9;
 }
 
 .footer-links ul {
   list-style: none;
   padding: 0;
-  margin: 20px 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
 }
 
-.footer-links li {
-  margin: 6px 0;
-  opacity: 0.85;
+.footer-links a,
+.footer-contact a,
+.footer-facebook {
+  color: #f8fafc;
+  text-decoration: none;
+}
+
+.footer-links a:hover,
+.footer-contact a:hover,
+.footer-facebook:hover {
+  text-decoration: underline;
 }
 
 .footer-copy {
-  margin-top: 30px;
+  margin: 24px auto 0;
+  max-width: 1200px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 14px;
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
-.footer-facebook {
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 600;
+.footer-copy p {
+  margin: 4px 0;
 }
 
-.footer-facebook:hover {
-  text-decoration: underline;
+@media (max-width: 900px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
 }
 
 .map-wrapper {
