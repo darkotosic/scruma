@@ -71,7 +71,15 @@ export default function HomeClient() {
 
   return (
     <>
-      <Hero title={settings.hero_title || "Садржај није унет у админ панел"} subtitle={settings.hero_subtitle || ""} image={settings.hero_image || ""} ctas={[]} />
+      <Hero
+        title={settings.hero_title || "Садржај није унет у админ панел"}
+        subtitle={settings.hero_subtitle || ""}
+        image={settings.hero_image || ""}
+        ctas={[
+          { title: "Контакт", href: "/kontakt" },
+          { title: "Сале", href: "/sale" },
+        ]}
+      />
 
       <section className="pageSection">
         <Container>
