@@ -27,9 +27,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ClientProviders>
+          <a href="#glavni-sadrzaj" className="skip-link">
+            Прескочи на садржај
+          </a>
           <SiteFavicon />
           <Header />
-          <main className="page-content">{children}</main>
+          <main id="glavni-sadrzaj" className="page-content" tabIndex={-1}>
+            {children}
+          </main>
           <Footer />
           <BackToTopButton />
         </ClientProviders>
