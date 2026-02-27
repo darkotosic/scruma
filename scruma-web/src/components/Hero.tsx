@@ -5,17 +5,20 @@ import { useScript } from '@/context/ScriptContext';
 import Container from './Container';
 
 type Cta = { title: string; href: string };
+type HeroFit = 'cover' | 'contain';
 
 export default function Hero({
   title,
   subtitle,
   image,
-  ctas
+  ctas,
+  fit = 'cover'
 }: {
   title: string;
   subtitle: string;
   image: string;
   ctas: Cta[];
+  fit?: HeroFit;
 }) {
   const { t } = useScript();
   const normalizedSubtitle = subtitle
@@ -23,8 +26,10 @@ export default function Hero({
     .replace(/&nbsp;/gi, ' ')
     .trim();
 
+  const sectionClass = fit === 'contain' ? 'hero hero--contain' : 'hero';
+
   return (
-    <section className="hero" aria-label={t('Херо секција')}>
+    <section className={sectionClass} aria-label={t('Херо секција')}>
       <div className="heroMedia" style={{ backgroundImage: `url(${image})` }} />
       <div className="heroOverlay" />
       <Container>

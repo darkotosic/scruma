@@ -172,6 +172,7 @@ main {
 .hero {
   position: relative;
   height: 100vh;
+  height: 100svh;
   min-height: 560px;
   overflow: hidden;
   margin-top: calc(-1 * var(--navbar-height));
@@ -182,7 +183,15 @@ main {
   inset: 0;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  background-color: #000;
   transform: scale(1.02);
+}
+
+/* Мод за странице где слика НЕ СМЕ да се сече (нпр. Контакт плакат/лого) */
+.hero--contain .heroMedia {
+  background-size: contain;
+  transform: none;
 }
 
 .heroOverlay {
@@ -1033,5 +1042,26 @@ body {
 @media (max-width: 768px) {
   .map-wrapper iframe {
     height: 300px;
+  }
+
+  /* Мобилни: “fit the screen” без сечења херо слике */
+  .hero {
+    height: 100svh;
+    min-height: 0;
+  }
+
+  .heroMedia {
+    background-size: contain;
+    transform: none;
+  }
+
+  /* Да на мобилном текст остане читљив и кад има “letterbox” */
+  .heroOverlay {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.70) 0%,
+      rgba(0, 0, 0, 0.45) 45%,
+      rgba(0, 0, 0, 0.20) 100%
+    );
   }
 }
