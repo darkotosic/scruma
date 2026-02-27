@@ -6,7 +6,7 @@ import Container from "@/components/Container";
 import Hero from "@/components/Hero";
 import SectionHeader from "@/components/SectionHeader";
 import { ApiErrorState } from "@/components/ui/ApiErrorState";
-import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
+import { StatusState } from "@/components/ui/StatusState";
 import { fetchPosts, fetchSite } from "@/lib/api";
 import { mapPostToCard } from "@/lib/normalizeContent";
 
@@ -43,21 +43,7 @@ export default function HomeClient() {
   }
 
   if (!data) {
-    return (
-      <div className="space-y-6 p-4">
-        <SkeletonBlock className="h-[360px] w-full" />
-        <div className="grid gap-4 md:grid-cols-3">
-          <SkeletonBlock className="h-[140px]" />
-          <SkeletonBlock className="h-[140px]" />
-          <SkeletonBlock className="h-[140px]" />
-        </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          <SkeletonBlock className="h-[220px]" />
-          <SkeletonBlock className="h-[220px]" />
-          <SkeletonBlock className="h-[220px]" />
-        </div>
-      </div>
-    );
+    return <StatusState variant="loading" title="Учитавање садржаја" details="Подаци се преузимају са CMS сервиса." />;
   }
 
   const settings = data.site?.settings || {};
@@ -84,21 +70,33 @@ export default function HomeClient() {
       <section className="pageSection">
         <Container>
           <SectionHeader title="Обавештења" subtitle="Најважније информације." />
-          {announcements.length ? <CardGrid items={announcements} /> : <p>Садржај није унет у админ панел.</p>}
+          {announcements.length ? (
+            <CardGrid items={announcements} />
+          ) : (
+            <StatusState variant="empty" title="Садржај још није унет" details="Обавештења ће бити приказана чим се унесу у админ панел." />
+          )}
         </Container>
       </section>
 
       <section className="pageSection">
         <Container>
           <SectionHeader title="Вести" subtitle="Најновија дешавања." />
-          {news.length ? <CardGrid items={news} /> : <p>Садржај није унет у админ панел.</p>}
+          {news.length ? (
+            <CardGrid items={news} />
+          ) : (
+            <StatusState variant="empty" title="Садржај још није унет" details="Вести ће бити приказане чим се унесу у админ панел." />
+          )}
         </Container>
       </section>
 
       <section className="pageSection">
         <Container>
           <SectionHeader title="Спортске вести" subtitle="Резултати, најаве и локални спорт." />
-          {sports.length ? <CardGrid items={sports} /> : <p>Садржај није унет у админ панел.</p>}
+          {sports.length ? (
+            <CardGrid items={sports} />
+          ) : (
+            <StatusState variant="empty" title="Садржај још није унет" details="Спортски догађаји ће бити приказани чим се унесу у админ панел." />
+          )}
         </Container>
       </section>
 

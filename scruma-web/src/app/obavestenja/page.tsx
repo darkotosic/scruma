@@ -5,7 +5,7 @@ import CardsGrid from "@/components/CardsGrid";
 import PageHero from "@/components/PageHero";
 import Section from "@/components/Section";
 import { ApiErrorState } from "@/components/ui/ApiErrorState";
-import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
+import { StatusState } from "@/components/ui/StatusState";
 import { fetchPosts } from "@/lib/api";
 import { toPreviewText } from "@/lib/normalizeContent";
 
@@ -34,7 +34,7 @@ export default function ObavestenjaPage() {
         {err ? (
           <ApiErrorState title="Обавештења нису доступна" details={err} onRetry={load} />
         ) : items === null ? (
-          <SkeletonBlock className="h-[520px] w-full" />
+          <StatusState variant="loading" title="Учитавање обавештења" details="Подаци се преузимају са CMS сервиса." />
         ) : items.length ? (
           <CardsGrid
             items={items.map((p) => ({
@@ -45,7 +45,7 @@ export default function ObavestenjaPage() {
             }))}
           />
         ) : (
-          <p>Садржај није унет у админ панел.</p>
+          <StatusState variant="empty" title="Садржај још није унет" details="Обавештења ће бити приказана чим се унесу у админ панел." />
         )}
       </Section>
     </>

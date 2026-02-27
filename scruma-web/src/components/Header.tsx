@@ -17,23 +17,39 @@ export default function Header() {
 
   const navItems = [
     { href: "/", label: "Насловна" },
-    { href: "/velika-sala", label: "Велика сала (спортска хала)" },
     {
       href: "/sale",
-      label: "Сале",
+      label: "Објекти",
       children: [
+        { href: "/velika-sala", label: "Велика сала (спортска хала)" },
+        { href: "/sale", label: "Све сале" },
         { href: "/sale/dzudo-sala", label: "Џудо сала" },
         { href: "/sale/plava-sala", label: "Плава сала (кик бокс и рехаб)" },
         { href: "/sale/crvena-sala", label: "Црвена сала (карате и фитнес)" },
         { href: "/sale/mala-sala", label: "Мала сала (савате бокс, теквондо)" },
+        { href: "/kuglana", label: "Куглана" },
+        { href: "/teretana", label: "Теретана" },
+        { href: "/bazen-borkovac", label: "Базен Борковац" },
       ],
     },
-    { href: "/kuglana", label: "Куглана" },
-    { href: "/teretana", label: "Теретана" },
-    { href: "/bazen-borkovac", label: "Базен Борковац" },
-    { href: "/galerija", label: "Галерија" },
-    { href: "/o-nama", label: "О нама" },
-    { href: "/kontakt", label: "Контакт" },
+    {
+      href: "/obavestenja",
+      label: "Садржај",
+      children: [
+        { href: "/obavestenja", label: "Обавештења" },
+        { href: "/vesti", label: "Вести" },
+        { href: "/dogadjaji", label: "Догађаји" },
+        { href: "/galerija", label: "Галерија" },
+      ],
+    },
+    {
+      href: "/o-nama",
+      label: "Информације",
+      children: [
+        { href: "/o-nama", label: "О нама" },
+        { href: "/kontakt", label: "Контакт" },
+      ],
+    },
   ];
 
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
@@ -41,7 +57,7 @@ export default function Header() {
   const [siteError, setSiteError] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 0);
+    const onScroll = () => setIsScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
@@ -102,7 +118,7 @@ export default function Header() {
                   <Link href={item.href} className="nav-dropdown-trigger" aria-haspopup="true">
                     {t(item.label)}
                   </Link>
-                  <div className="nav-dropdown-menu" aria-label={t("Подмени сала")}>
+                  <div className="nav-dropdown-menu" aria-label={t(`Подмени ${item.label}`)}>
                     {item.children.map((child) => (
                       <Link key={child.href} href={child.href}>
                         {t(child.label)}

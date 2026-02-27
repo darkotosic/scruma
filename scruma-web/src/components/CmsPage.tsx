@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Container from "@/components/Container";
 import PageHero from "@/components/PageHero";
 import { ApiErrorState } from "@/components/ui/ApiErrorState";
-import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
+import { StatusState } from "@/components/ui/StatusState";
 import { fetchPage } from "@/lib/api";
 
 export default function CmsPage({ slug }: { slug: string }) {
@@ -36,12 +36,7 @@ export default function CmsPage({ slug }: { slug: string }) {
   if (err) return <ApiErrorState title="Страница није доступна" details={err} onRetry={load} />;
 
   if (!page) {
-    return (
-      <div className="space-y-4 p-4">
-        <SkeletonBlock className="h-[260px] w-full" />
-        <SkeletonBlock className="h-[420px] w-full" />
-      </div>
-    );
+    return <StatusState variant="loading" title="Учитавање странице" details="Подаци се преузимају са CMS сервиса." />;
   }
 
   return (
