@@ -53,7 +53,6 @@ export default function Footer() {
 
       <div className="footer-copy">
         <p>{t("© 2026 Спортски центар Рума. Сва права задржана.")}</p>
-        <p>{t("Израда и дизајн: Дарко Тошић")}</p>
       </div>
     </footer>
   );
