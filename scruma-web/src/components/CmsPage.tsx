@@ -41,7 +41,12 @@ export default function CmsPage({ slug }: { slug: string }) {
 
   return (
     <>
-      <PageHero title={page.title} subtitle={page.subtitle || ""} image={page.hero_image || ""} />
+      <PageHero
+        title={page.title}
+        subtitle={page.subtitle || ""}
+        image={page.hero_image || ""}
+        fit={slug === "kontakt" ? "contain" : "cover"}
+      />
       <section className="pageSection">
         <Container>
           <div className="prose" dangerouslySetInnerHTML={{ __html: page.body_html || page.body || "" }} />
