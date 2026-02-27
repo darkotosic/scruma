@@ -2,9 +2,10 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { fetchPostById } from "@/lib/api";
-import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
 import { ApiErrorState } from "@/components/ui/ApiErrorState";
+import { StatusState } from "@/components/ui/StatusState";
 
 export default function VestiDetaljPage() {
   const sp = useSearchParams();
@@ -27,10 +28,11 @@ export default function VestiDetaljPage() {
   }, [id]);
 
   if (err) return <ApiErrorState title="Вест није доступна" details={err} onRetry={load} />;
-  if (!post) return <SkeletonBlock className="h-[520px] w-full" />;
+  if (!post) return <StatusState variant="loading" title="Учитавање вести" details="Подаци се преузимају са CMS сервиса." />;
 
   return (
     <article className="prose mx-auto max-w-4xl px-4 py-10 dark:prose-invert">
+      <Breadcrumbs items={[{ label: "Насловна", href: "/" }, { label: "Вести", href: "/vesti" }, { label: post.title }]} />
       <h1>{post.title}</h1>
       <div className="text-sm opacity-70">{post.published_at}</div>
       <div dangerouslySetInnerHTML={{ __html: post.body_html || post.body || "" }} />

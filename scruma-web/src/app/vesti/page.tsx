@@ -5,7 +5,7 @@ import CardsGrid from "@/components/CardsGrid";
 import PageHero from "@/components/PageHero";
 import Section from "@/components/Section";
 import { ApiErrorState } from "@/components/ui/ApiErrorState";
-import { SkeletonBlock } from "@/components/ui/SkeletonBlock";
+import { StatusState } from "@/components/ui/StatusState";
 import { fetchPosts } from "@/lib/api";
 import { toPreviewText } from "@/lib/normalizeContent";
 
@@ -46,11 +46,11 @@ export default function VestiPage() {
         {err ? (
           <ApiErrorState title="Вести нису доступне" details={err} onRetry={load} />
         ) : posts === null ? (
-          <SkeletonBlock className="h-[520px] w-full" />
+          <StatusState variant="loading" title="Учитавање вести" details="Подаци се преузимају са CMS сервиса." />
         ) : newsItems.length ? (
           <CardsGrid items={newsItems} />
         ) : (
-          <p>Садржај није унет у админ панел.</p>
+          <StatusState variant="empty" title="Садржај још није унет" details="Вести ће бити приказане чим се унесу у админ панел." />
         )}
       </Section>
     </>
