@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# 1) www -> non-www (увек на https)
+RewriteCond %{HTTP_HOST} ^www\.scruma\.rs$ [NC]
+RewriteRule ^ https://scruma.rs%{REQUEST_URI} [L,R=301]
+
+# 2) force https за non-www
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

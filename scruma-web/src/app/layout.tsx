@@ -9,12 +9,42 @@ import CallToActionBar from "@/components/CallToActionBar";
 import { buildOrgGraph } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  title: "СЦ Рума",
+  metadataBase: new URL("https://scruma.rs"),
+  title: "Спортски Центар Рума",
   description: "Званична интернет презентација Спортског центра Рума.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "СЦ Рума",
+    title: "Спортски Центар Рума",
     description: "Званична интернет презентација Спортског центра Рума.",
+    url: "https://scruma.rs/",
+    siteName: "СЦ Рума",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "СЦ Рума — лого",
+      },
+      {
+        url: "/og-image-square.png",
+        width: 600,
+        height: 600,
+        alt: "СЦ Рума — лого",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Спортски Центар Рума",
+    description: "Званична интернет презентација Спортског центра Рума.",
+    images: ["/og-image.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
   },
 };
 
