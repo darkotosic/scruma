@@ -30,7 +30,7 @@ export default function ObavestenjaPage() {
 
   return (
     <>
-      <PageHero title="Обавештења" subtitle="Званична саопштења." image="/images/hero.jpg" />
+      <PageHero title="Обавештења" subtitle="Званична саопштења." image="/images/hero.webp" />
       <Section>
         {err ? (
           <ApiErrorState title="Обавештења нису доступна" details={err} onRetry={load} />

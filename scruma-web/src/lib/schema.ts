@@ -32,7 +32,7 @@ export function isoOrUndefined(v?: any): string | undefined {
 }
 
 export function buildOrgGraph() {
-  const logo = absUrl("/logo.svg");
+  const logo = absUrl("/logo.webp");
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -103,7 +103,7 @@ export function buildNewsArticleJsonLd(post: any, kind: "news" | "notice") {
     publisher: {
       "@type": "Organization",
       name: ORG.name,
-      logo: { "@type": "ImageObject", url: absUrl("/logo.svg") },
+      logo: { "@type": "ImageObject", url: absUrl("/logo.webp") },
     },
   };
 }

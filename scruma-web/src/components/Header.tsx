@@ -358,7 +358,11 @@ export default function Header() {
         </div>
       </div>
 
-      <div className={`nav-mobile${menuOpen ? " open" : ""}`} aria-hidden={!menuOpen}>
+      <div
+        className={`nav-mobile${menuOpen ? " open" : ""}`}
+        aria-hidden={!menuOpen}
+        hidden={!menuOpen}
+      >
         <button
           type="button"
           className="nav-mobile-overlay"
