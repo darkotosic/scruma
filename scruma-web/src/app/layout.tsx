@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import SiteFavicon from "@/components/SiteFavicon";
 import ClientProviders from "@/context/ClientProviders";
 import BackToTopButton from "@/components/BackToTopButton";
+import CallToActionBar from "@/components/CallToActionBar";
 
 export const metadata: Metadata = {
   title: "СЦ Рума",
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main id="glavni-sadrzaj" className="page-content" tabIndex={-1}>
             {children}
           </main>
+          <CallToActionBar />
           <Footer />
           <BackToTopButton />
         </ClientProviders>

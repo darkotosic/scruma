@@ -30,12 +30,12 @@ export default function Footer() {
 
         <div className="footer-contact">
           <h4>{t("Контакт")}</h4>
-          <p>{t("Орловићева бб, Рума")}</p>
+          <p>{t("Вељка Дугошевић 100, Рума, Србија, 22400")}</p>
           <p>
-            <a href="tel:+38122345678">+381 22 345 678</a>
+            <a href="tel:+381605680004">+381605680004</a>
           </p>
           <p>
-            <a href="mailto:info@scruma.rs">info@scruma.rs</a>
+            <a href="mailto:scracunovodstvo@yahoo.com">scracunovodstvo@yahoo.com</a>
           </p>
           <p>
             <a
