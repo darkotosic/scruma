@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CardGrid from "@/components/CardGrid";
+import CardGridSkeleton from "@/components/CardGridSkeleton";
 import Container from "@/components/Container";
 import Hero from "@/components/Hero";
 import SectionHeader from "@/components/SectionHeader";
@@ -72,7 +73,7 @@ export default function HomeClient() {
           {announcements.length ? (
             <CardGrid items={announcements} />
           ) : loading ? (
-            <StatusState variant="loading" title="Учитавање садржаја" details="Подаци се преузимају са CMS сервиса." />
+            <CardGridSkeleton count={6} />
           ) : (
             <StatusState variant="empty" title="Садржај још није унет" details="Обавештења ће бити приказана чим се унесу у админ панел." />
           )}
@@ -85,7 +86,7 @@ export default function HomeClient() {
           {sports.length ? (
             <CardGrid items={sports} />
           ) : loading ? (
-            <StatusState variant="loading" title="Учитавање садржаја" details="Подаци се преузимају са CMS сервиса." />
+            <CardGridSkeleton count={6} />
           ) : (
             <StatusState variant="empty" title="Садржај још није унет" details="Спортски догађаји ће бити приказани чим се унесу у админ панел." />
           )}

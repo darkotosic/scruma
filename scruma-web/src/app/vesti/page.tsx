@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import CardsGrid from "@/components/CardsGrid";
+import CardGridSkeleton from "@/components/CardGridSkeleton";
 import PageHero from "@/components/PageHero";
 import Section from "@/components/Section";
 import { ApiErrorState } from "@/components/ui/ApiErrorState";
@@ -47,7 +48,7 @@ export default function VestiPage() {
         {err ? (
           <ApiErrorState title="Вести нису доступне" details={err} onRetry={load} />
         ) : posts === null ? (
-          <StatusState variant="loading" title="Учитавање вести" details="Подаци се преузимају са CMS сервиса." />
+          <CardGridSkeleton count={6} />
         ) : newsItems.length ? (
           <CardsGrid items={newsItems} />
         ) : (

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CardsGrid from "@/components/CardsGrid";
+import CardGridSkeleton from "@/components/CardGridSkeleton";
 import PageHero from "@/components/PageHero";
 import Section from "@/components/Section";
 import { ApiErrorState } from "@/components/ui/ApiErrorState";
@@ -35,7 +36,7 @@ export default function ObavestenjaPage() {
         {err ? (
           <ApiErrorState title="Обавештења нису доступна" details={err} onRetry={load} />
         ) : items === null ? (
-          <StatusState variant="loading" title="Учитавање обавештења" details="Подаци се преузимају са CMS сервиса." />
+          <CardGridSkeleton count={6} />
         ) : items.length ? (
           <CardsGrid
             items={items.map((p) => ({

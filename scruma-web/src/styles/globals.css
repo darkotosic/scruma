@@ -1233,3 +1233,22 @@ main {
     bottom: 96px;
   }
 }
+
+/* =========================================================
+   SKELETON (без Tailwind-а)
+   ========================================================= */
+@keyframes skeletonPulse {
+  0% { opacity: 0.55; }
+  50% { opacity: 1; }
+  100% { opacity: 0.55; }
+}
+
+.skeleton {
+  border-radius: var(--radius-xl);
+  background: rgba(0, 0, 0, 0.08);
+  animation: skeletonPulse 1.2s ease-in-out infinite;
+}
+
+html[data-theme="dark"] .skeleton {
+  background: rgba(255, 255, 255, 0.10);
+}

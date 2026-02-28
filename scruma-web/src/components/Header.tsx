@@ -207,7 +207,7 @@ export default function Header() {
   }, []);
   const Logo = ({ className }: { className?: string }) => {
     if (logoUrl === null && !siteError) {
-      return <SkeletonBlock className={className || "h-9 w-28"} />;
+      return <SkeletonBlock className={className || ""} style={{ height: 36, width: 112 }} />;
     }
     if (!logoUrl) {
       return <div className={className || "h-9 w-28"} />;
@@ -219,6 +219,7 @@ export default function Header() {
         className={className}
         width={77}
         height={77}
+        loading="eager"
         decoding="async"
       />
     );
