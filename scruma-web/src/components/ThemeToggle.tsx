@@ -5,11 +5,12 @@ import { useEffect, useState } from 'react';
 type ThemeToggleProps = {
   className?: string;
   id?: string;
+  compact?: boolean;
 };
 
 type Theme = 'light' | 'dark';
 
-export default function ThemeToggle({ className, id }: ThemeToggleProps) {
+export default function ThemeToggle({ className, id, compact = false }: ThemeToggleProps) {
   const [theme, setTheme] = useState<Theme>('light');
 
   const applyTheme = (next: Theme) => {
@@ -43,8 +44,15 @@ export default function ThemeToggle({ className, id }: ThemeToggleProps) {
   };
 
   return (
-    <button id={id} className={className} onClick={toggle} type="button">
-      {theme === 'dark' ? 'Светла тема' : 'Тамна тема'}
+    <button
+      id={id}
+      className={className}
+      onClick={toggle}
+      type="button"
+      aria-label={compact ? (theme === 'dark' ? 'Пређи на светлу тему' : 'Пређи на тамну тему') : undefined}
+      title={compact ? (theme === 'dark' ? 'Светла тема' : 'Тамна тема') : undefined}
+    >
+      {compact ? (theme === 'dark' ? '☀️' : '🌙') : theme === 'dark' ? 'Светла тема' : 'Тамна тема'}
     </button>
   );
 }
