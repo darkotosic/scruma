@@ -1163,3 +1163,60 @@ main {
     max-width: 56vw;
   }
 }
+
+/* =========================================================
+   STICKY CALL (само мобилни)
+   ========================================================= */
+
+.sticky-call {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 1200;
+
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+
+  display: none; /* default: сакривено (desktop/tablet) */
+
+  align-items: center;
+  justify-content: center;
+
+  background: color-mix(in srgb, var(--accent) 85%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  box-shadow: var(--shadow-lg);
+
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.sticky-call img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.25));
+}
+
+.sticky-call:active {
+  transform: translateY(1px);
+}
+
+.sticky-call:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, #fff);
+  outline-offset: 3px;
+}
+
+/* Само мобилни приказ */
+@media (max-width: 768px) {
+  .sticky-call {
+    display: inline-flex;
+  }
+
+  /* Да се не преклапа са sticky-call дугметом */
+  .back-to-top {
+    right: 16px;
+    bottom: 96px;
+  }
+}
