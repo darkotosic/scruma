@@ -30,17 +30,14 @@ export default function Hero({
 
   return (
     <section className={sectionClass} aria-label={t('Херо секција')}>
-      <div
-        className="heroMedia"
-        style={{
-          backgroundImage: `url(${(image && image.trim()) ? image : '/images/hero.webp'})`,
-        }}
-      >
+      <div className="heroMedia">
         <img
           className="heroMediaImg"
           src={(image && image.trim()) ? image : '/images/hero.webp'}
           alt="Херо слика"
           loading="eager"
+          fetchPriority="high"
+          decoding="async"
           width="1920"
           height="1080"
         />

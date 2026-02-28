@@ -15,10 +15,18 @@ function mapPostsToCards(posts: any[], hrefBuilder: (item: any) => string) {
 }
 
 export default function HomeClient() {
-  const [data, setData] = useState<any | null>(null);
+  const [data, setData] = useState<any>({
+    site: { settings: {} },
+    notice: { items: [] },
+    sport: { items: [] },
+  });
   const [err, setErr] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [mapVisible, setMapVisible] = useState(false);
+
   async function load() {
     setErr(null);
+    setLoading(true);
     try {
       const [site, notice, sport] = await Promise.all([
         fetchSite(),
@@ -30,20 +38,14 @@ export default function HomeClient() {
       const message = typeof e?.message === "string" ? e.message : "Неуспешно учитавање података са API-ја.";
       const status = typeof e?.status === "number" ? `Код: ${e.status}` : "";
       setErr([message, status].filter(Boolean).join("\n"));
+    } finally {
+      setLoading(false);
     }
   }
 
   useEffect(() => {
     load();
   }, []);
-
-  if (err) {
-    return <ApiErrorState details={err} onRetry={load} />;
-  }
-
-  if (!data) {
-    return <StatusState variant="loading" title="Учитавање садржаја" details="Подаци се преузимају са CMS сервиса." />;
-  }
 
   const settings = data.site?.settings || {};
   const mapEmbedUrl =
@@ -69,6 +71,8 @@ export default function HomeClient() {
           <SectionHeader title="Обавештења" subtitle="Најважније информације." />
           {announcements.length ? (
             <CardGrid items={announcements} />
+          ) : loading ? (
+            <StatusState variant="loading" title="Учитавање садржаја" details="Подаци се преузимају са CMS сервиса." />
           ) : (
             <StatusState variant="empty" title="Садржај још није унет" details="Обавештења ће бити приказана чим се унесу у админ панел." />
           )}
@@ -80,6 +84,8 @@ export default function HomeClient() {
           <SectionHeader title="Спортске вести" subtitle="Резултати, најаве и локални спорт." />
           {sports.length ? (
             <CardGrid items={sports} />
+          ) : loading ? (
+            <StatusState variant="loading" title="Учитавање садржаја" details="Подаци се преузимају са CMS сервиса." />
           ) : (
             <StatusState variant="empty" title="Садржај још није унет" details="Спортски догађаји ће бити приказани чим се унесу у админ панел." />
           )}
@@ -90,24 +96,39 @@ export default function HomeClient() {
         <Container>
           <SectionHeader title="Како до нас" subtitle="Локација и приступ спортском центру." />
 
-          <div className="map-wrapper">
-            <iframe
-              src={mapEmbedUrl}
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Локација спортског центра"
-            ></iframe>
-          </div>
-          <p>
-            Ако се мапа не учита, отворите локацију директно:&nbsp;
-            <a href={mapFallbackUrl} target="_blank" rel="noopener noreferrer">
-              Отвори у Google мапама
-            </a>
-            .
-          </p>
+          {mapVisible ? (
+            <div className="map-wrapper">
+              <iframe
+                src={mapEmbedUrl}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Локација спортског центра"
+              ></iframe>
+            </div>
+          ) : (
+            <div className="panel" style={{ display: "grid", gap: "10px" }}>
+              <p style={{ margin: 0 }}>Мапа се учитава на захтев ради бржег отварања странице.</p>
+              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                <button type="button" className="btn btnPrimary" onClick={() => setMapVisible(true)}>
+                  Прикажи мапу
+                </button>
+                <a className="btn" href={mapFallbackUrl} target="_blank" rel="noopener noreferrer">
+                  Отвори у Google мапама
+                </a>
+              </div>
+            </div>
+          )}
         </Container>
       </section>
+
+      {err ? (
+        <section className="pageSection">
+          <Container>
+            <ApiErrorState details={err} onRetry={load} />
+          </Container>
+        </section>
+      ) : null}
 
     </>
   );
