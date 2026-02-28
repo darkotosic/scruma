@@ -102,7 +102,6 @@ class Post(models.Model):
     TYPE_SPORT = "sport"
 
     TYPE_CHOICES = [
-        (TYPE_NEWS, "Вести"),
         (TYPE_NOTICE, "Обавештења"),
         (TYPE_SPORT, "Спортске вести"),
     ]

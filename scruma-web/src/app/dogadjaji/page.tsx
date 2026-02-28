@@ -30,7 +30,7 @@ export default function DogadjajiPage() {
 
   return (
     <>
-      <PageHero title="Догађаји" subtitle="Актуелна спортска дешавања." />
+      <PageHero title="Догађаји" subtitle="Актуелна спортска дешавања." image="/images/hero.jpg" />
       <Section>
         {err ? (
           <ApiErrorState title="Догађаји нису доступни" details={err} onRetry={load} />

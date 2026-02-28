@@ -65,7 +65,7 @@ def _abs_media(request, path: str) -> str:
 
 class V1PostsView(View):
     def get(self, request):
-        qs = Post.objects.filter(is_published=True).order_by("-published_at")
+        qs = Post.objects.filter(is_published=True).exclude(type=Post.TYPE_NEWS).order_by("-published_at")
         ptype = (request.GET.get("type") or "").strip()
         try:
             limit = int(request.GET.get("limit") or 100)
@@ -73,6 +73,8 @@ class V1PostsView(View):
             limit = 100
         limit = max(1, min(limit, 100))
         if ptype:
+            if ptype == Post.TYPE_NEWS:
+                return JsonResponse({"items": []})
             qs = qs.filter(type=ptype)
 
         items = [
@@ -94,7 +96,7 @@ class V1PostsView(View):
 class V1PostDetailView(View):
     def get(self, request, post_id: int):
         try:
-            post = Post.objects.get(id=post_id, is_published=True)
+            post = Post.objects.get(id=post_id, is_published=True, type__in=[Post.TYPE_NOTICE, Post.TYPE_SPORT])
         except Post.DoesNotExist:
             return JsonResponse({"detail": "Пост није пронађен."}, status=404)
 
