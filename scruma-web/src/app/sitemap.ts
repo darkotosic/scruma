@@ -40,13 +40,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: buildUrl("/galerija"), lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: buildUrl("/dogadjaji"), lastModified: now, changeFrequency: "daily", priority: 0.9 },
     { url: buildUrl("/obavestenja"), lastModified: now, changeFrequency: "daily", priority: 0.9 },
+    { url: buildUrl("/vesti"), lastModified: now, changeFrequency: "daily", priority: 0.9 },
     { url: buildUrl("/o-nama"), lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: buildUrl("/kontakt"), lastModified: now, changeFrequency: "monthly", priority: 0.7 },
   ];
 
-  const [eventsData, announcementsData] = await Promise.all([
+  const [eventsData, announcementsData, newsData] = await Promise.all([
     fetchJson<{ items: ContentItem[] }>("/api/v1/posts/?type=sport"),
     fetchJson<{ items: ContentItem[] }>("/api/v1/announcements/"),
+    fetchJson<{ items: ContentItem[] }>("/api/v1/posts/?type=news"),
   ]);
 
   const eventItems = (eventsData?.items || []).map((item) => ({
@@ -63,5 +65,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...eventItems, ...announcementItems];
+  const newsItems = (newsData?.items || []).map((item) => ({
+    url: buildUrl(`/vesti/detalj/?id=${encodeURIComponent(item.id)}`),
+    lastModified: item.published_at ? new Date(item.published_at) : now,
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...eventItems, ...announcementItems, ...newsItems];
 }

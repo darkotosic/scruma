@@ -102,8 +102,9 @@ class Post(models.Model):
     TYPE_SPORT = "sport"
 
     TYPE_CHOICES = [
+        (TYPE_NEWS, "Вести"),
         (TYPE_NOTICE, "Обавештења"),
-        (TYPE_SPORT, "Спортске вести"),
+        (TYPE_SPORT, "Догађаји"),
     ]
 
     type = models.CharField("Тип", max_length=20, choices=TYPE_CHOICES)
@@ -112,6 +113,14 @@ class Post(models.Model):
     body = models.TextField("Садржај", blank=True, default="")
     image = models.ImageField("Слика", upload_to="posts/", blank=True, null=True)
     link_url = models.URLField("Линк", blank=True, default="")
+
+    # ✅ ENTERPRISE EVENT ПOЉА (користи се кад је type="sport")
+    event_start = models.DateTimeField("Почетак догађаја", blank=True, null=True)
+    event_end = models.DateTimeField("Крај догађаја", blank=True, null=True)
+    location_name = models.CharField("Локација (назив)", max_length=120, blank=True, default="")
+    ticket_url = models.URLField("Линк за карте", max_length=300, blank=True, default="")
+    opponent = models.CharField("Противник/учесник", max_length=120, blank=True, default="")
+
     is_published = models.BooleanField("Објављено", default=True)
     published_at = models.DateTimeField("Датум објаве", auto_now_add=True)
 
