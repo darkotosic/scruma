@@ -91,7 +91,16 @@ class FooterLinkAdmin(admin.ModelAdmin):
 class PostAdmin(SCEditorAdminMixin, admin.ModelAdmin):
     list_display = ("type", "title", "is_published", "published_at")
     list_filter = ("type", "is_published")
-    search_fields = ("title", "excerpt", "body")
+    search_fields = ("title", "excerpt", "body", "opponent", "location_name")
+
+    fieldsets = (
+        ("Основно", {"fields": ("type", "title", "excerpt", "body", "image", "link_url")}),
+        (
+            "Догађај (попуњава се само ако је Тип = Догађаји)",
+            {"fields": ("event_start", "event_end", "location_name", "opponent", "ticket_url")},
+        ),
+        ("Објава", {"fields": ("is_published",)}),
+    )
 
 
 @admin.register(Page)

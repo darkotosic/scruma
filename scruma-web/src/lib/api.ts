@@ -58,6 +58,11 @@ export type PostsResponse = {
     body_html?: string;
     image?: string;
     published_at?: string;
+    event_start?: string;
+    event_end?: string;
+    location_name?: string;
+    ticket_url?: string;
+    opponent?: string;
   }[];
 };
 
@@ -70,6 +75,11 @@ export type PostResponse = {
   body_html?: string;
   image?: string;
   published_at?: string;
+  event_start?: string;
+  event_end?: string;
+  location_name?: string;
+  ticket_url?: string;
+  opponent?: string;
 };
 
 async function fetchJson<T = Json>(path: string, init?: RequestInit): Promise<T> {

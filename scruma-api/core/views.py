@@ -65,7 +65,7 @@ def _abs_media(request, path: str) -> str:
 
 class V1PostsView(View):
     def get(self, request):
-        qs = Post.objects.filter(is_published=True).exclude(type=Post.TYPE_NEWS).order_by("-published_at")
+        qs = Post.objects.filter(is_published=True).order_by("-published_at")
         ptype = (request.GET.get("type") or "").strip()
         try:
             limit = int(request.GET.get("limit") or 100)
@@ -73,8 +73,6 @@ class V1PostsView(View):
             limit = 100
         limit = max(1, min(limit, 100))
         if ptype:
-            if ptype == Post.TYPE_NEWS:
-                return JsonResponse({"items": []})
             qs = qs.filter(type=ptype)
 
         items = [
@@ -87,6 +85,11 @@ class V1PostsView(View):
                 "body_html": p.body,
                 "image": _abs_media(request, p.image.url) if p.image else "",
                 "published_at": p.published_at.isoformat() if p.published_at else "",
+                "event_start": p.event_start.isoformat() if getattr(p, "event_start", None) else "",
+                "event_end": p.event_end.isoformat() if getattr(p, "event_end", None) else "",
+                "location_name": getattr(p, "location_name", "") or "",
+                "ticket_url": getattr(p, "ticket_url", "") or "",
+                "opponent": getattr(p, "opponent", "") or "",
             }
             for p in qs[:limit]
         ]
@@ -96,7 +99,11 @@ class V1PostsView(View):
 class V1PostDetailView(View):
     def get(self, request, post_id: int):
         try:
-            post = Post.objects.get(id=post_id, is_published=True, type__in=[Post.TYPE_NOTICE, Post.TYPE_SPORT])
+            post = Post.objects.get(
+                id=post_id,
+                is_published=True,
+                type__in=[Post.TYPE_NOTICE, Post.TYPE_SPORT, Post.TYPE_NEWS],
+            )
         except Post.DoesNotExist:
             return JsonResponse({"detail": "Пост није пронађен."}, status=404)
 
@@ -110,6 +117,11 @@ class V1PostDetailView(View):
                 "body_html": post.body,
                 "image": _abs_media(request, post.image.url) if post.image else "",
                 "published_at": post.published_at.isoformat() if post.published_at else "",
+                "event_start": post.event_start.isoformat() if getattr(post, "event_start", None) else "",
+                "event_end": post.event_end.isoformat() if getattr(post, "event_end", None) else "",
+                "location_name": getattr(post, "location_name", "") or "",
+                "ticket_url": getattr(post, "ticket_url", "") or "",
+                "opponent": getattr(post, "opponent", "") or "",
             }
         )
 

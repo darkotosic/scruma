@@ -1,9 +1,3 @@
-// scruma-web/src/lib/schema.ts
-// JSON-LD генератори (schema.org) за enterprise SEO.
-//
-// Напомена: За static export (output: "export") не можемо server-side да генеришемо JSON-LD за сваки динамички ID,
-// па за „детaљ“ странице убацујемо JSON-LD client-side када се подаци учитају.
-
 import { toPreviewText } from "./normalizeContent";
 
 export const SITE_URL =
@@ -39,7 +33,6 @@ export function isoOrUndefined(v?: any): string | undefined {
 
 export function buildOrgGraph() {
   const logo = absUrl("/logo.svg");
-
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -95,7 +88,6 @@ export function buildNewsArticleJsonLd(post: any, kind: "news" | "notice") {
   const headline = String(post?.title || "").trim();
   const image = absUrl(post?.image) || absUrl("/images/hero.jpg");
   const published = isoOrUndefined(post?.published_at) || isoOrUndefined(post?.created_at);
-
   const description = toPreviewText(post?.excerpt || post?.body || post?.body_html || "");
 
   return {
@@ -120,15 +112,20 @@ export function buildSportsEventJsonLd(post: any) {
   const url = absUrl(`/dogadjaji/detalj/?id=${encodeURIComponent(String(post?.id ?? ""))}`);
   const name = String(post?.title || "").trim();
 
-  // „startDate“ је идеално посебно поље у CMS-у. Док га немамо, користимо најбољу доступну вредност.
   const start =
+    isoOrUndefined(post?.event_start) ||
     isoOrUndefined(post?.start_date) ||
     isoOrUndefined(post?.starts_at) ||
     isoOrUndefined(post?.event_date) ||
     isoOrUndefined(post?.published_at);
 
+  const end = isoOrUndefined(post?.event_end);
+
   const image = absUrl(post?.image) || absUrl("/images/hero.jpg");
   const description = toPreviewText(post?.excerpt || post?.body || post?.body_html || "");
+  const locationName = String(post?.location_name || "").trim() || ORG.name;
+  const opponent = String(post?.opponent || "").trim();
+  const ticketUrl = String(post?.ticket_url || "").trim();
 
   return {
     "@context": "https://schema.org",
@@ -137,11 +134,12 @@ export function buildSportsEventJsonLd(post: any) {
     description,
     url,
     startDate: start,
+    endDate: end,
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     eventStatus: "https://schema.org/EventScheduled",
     location: {
       "@type": "Place",
-      name: ORG.name,
+      name: locationName,
       address: {
         "@type": "PostalAddress",
         streetAddress: ORG.address,
@@ -151,5 +149,15 @@ export function buildSportsEventJsonLd(post: any) {
     },
     organizer: { "@type": "Organization", name: ORG.name, url: SITE_URL },
     image: image ? [image] : undefined,
+    competitor: opponent ? [{ "@type": "SportsTeam", name: opponent }] : undefined,
+    offers: ticketUrl
+      ? [
+          {
+            "@type": "Offer",
+            url: ticketUrl,
+            availability: "https://schema.org/InStock",
+          },
+        ]
+      : undefined,
   };
 }

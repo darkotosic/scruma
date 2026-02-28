@@ -40,7 +40,9 @@ export default function DogadjajiDetaljPage() {
   const nextPost = useMemo(() => {
     if (!id || !related.length) return null;
     const sorted = [...related].sort(
-      (a, b) => new Date(b.published_at || 0).getTime() - new Date(a.published_at || 0).getTime()
+      (a, b) =>
+        new Date(b.event_start || b.published_at || 0).getTime() -
+        new Date(a.event_start || a.published_at || 0).getTime()
     );
     const index = sorted.findIndex((item) => String(item.id) === String(id));
     return index >= 0 ? sorted[index + 1] || null : null;
@@ -55,7 +57,7 @@ export default function DogadjajiDetaljPage() {
       <article className="prose mx-auto max-w-4xl px-4 py-10 dark:prose-invert">
         <Breadcrumbs items={[{ label: "Насловна", href: "/" }, { label: "Догађаји", href: "/dogadjaji" }, { label: post.title }]} />
         <h1>{post.title}</h1>
-        <div className="text-sm opacity-70">{formatLocalDate(post.published_at, true)}</div>
+        <div className="text-sm opacity-70">{formatLocalDate(post.event_start || post.published_at, true)}</div>
         <div dangerouslySetInnerHTML={{ __html: post.body_html || post.body || "" }} />
         <DetailFooterNav
           backHref="/dogadjaji"
