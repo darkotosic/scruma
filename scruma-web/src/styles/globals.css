@@ -283,6 +283,10 @@ main {
   transform: none;
 }
 
+.heroMediaImg {
+  display: none;
+}
+
 .heroOverlay {
   position: absolute;
   inset: 0;
@@ -1116,26 +1120,32 @@ main {
     height: 300px;
   }
 
-  /* Мобилни: приказуј САМО херо слику (без текста), без празних зона */
+  /* Мобилни: херо није 100vh, слика иде природно: ширина 100%, висина ауто */
   .hero {
-    height: 100svh;
+    height: auto;
     min-height: 0;
   }
 
-  /* Кључно: COVER уместо CONTAIN да не постоје празни простори изнад/испод */
+  /* На мобилном не приказуј текст/overlay преко слике */
+  .heroOverlay,
+  .heroContent {
+    display: none;
+  }
+
+  /* Скини background режим са мобилног да не утиче */
   .heroMedia {
-    background-size: cover;
-    background-position: center;
+    position: relative;
+    background-image: none !important;
+    background-size: initial;
+    background-position: initial;
     transform: none;
   }
 
-  /* На мобилном не приказуј overlay ни текст преко слике */
-  .heroOverlay {
-    display: none;
-  }
-
-  .heroContent {
-    display: none;
+  /* Кључно: цела слика видљива, без сечења */
+  .heroMediaImg {
+    width: 100%;
+    height: auto;
+    display: block;
   }
 }
 

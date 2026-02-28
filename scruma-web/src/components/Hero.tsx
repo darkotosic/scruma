@@ -32,8 +32,17 @@ export default function Hero({
     <section className={sectionClass} aria-label={t('Херо секција')}>
       <div
         className="heroMedia"
-        style={{ backgroundImage: `url(${(image && image.trim()) ? image : '/images/hero.jpg'})` }}
-      />
+        style={{
+          backgroundImage: `url(${(image && image.trim()) ? image : '/images/hero.jpg'})`,
+        }}
+      >
+        <img
+          className="heroMediaImg"
+          src={(image && image.trim()) ? image : '/images/hero.jpg'}
+          alt="Херо слика"
+          loading="eager"
+        />
+      </div>
       <div className="heroOverlay" />
       <Container>
         <div className="heroContent">
