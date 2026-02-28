@@ -594,7 +594,8 @@ main {
   gap: 4px;
 }
 
-.nav-links a {
+.nav-links a,
+.nav-links button {
   margin: 0 10px;
   font-weight: 700;
   text-decoration: none;
@@ -603,7 +604,8 @@ main {
   transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
-.navbar.scrolled .nav-links a {
+.navbar.scrolled .nav-links a,
+.navbar.scrolled .nav-links button {
   color: var(--text);
   text-shadow: none;
 }
@@ -617,6 +619,12 @@ main {
 .nav-dropdown-trigger {
   display: inline-flex;
   align-items: center;
+  margin: 0 10px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
 }
 
 .nav-dropdown-menu {
@@ -651,7 +659,8 @@ main {
 }
 
 .nav-dropdown:hover .nav-dropdown-menu,
-.nav-dropdown:focus-within .nav-dropdown-menu {
+.nav-dropdown:focus-within .nav-dropdown-menu,
+.nav-dropdown-menu.open {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);

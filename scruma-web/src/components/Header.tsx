@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import ScriptToggle from "./ScriptToggle";
 import { useScript } from "@/context/ScriptContext";
@@ -14,6 +14,12 @@ export default function Header() {
   const facebookUrl = "https://www.facebook.com/p/Ustanova-Sportski-centar-Ruma-100041307083076/";
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeDesktopDropdown, setActiveDesktopDropdown] = useState<string | null>(null);
+  const burgerButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileDrawerRef = useRef<HTMLElement>(null);
+  const dropdownCloseTimeoutRef = useRef<number | null>(null);
+  const wasMenuOpenRef = useRef(false);
+  const dropdownIdPrefix = useId();
 
   const navItems = [
     { href: "/", label: "Насловна" },
@@ -88,11 +94,93 @@ export default function Header() {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
+
+    if (!menuOpen) {
+      if (wasMenuOpenRef.current) {
+        burgerButtonRef.current?.focus();
+      }
+      wasMenuOpenRef.current = false;
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+
+    wasMenuOpenRef.current = true;
+
+    const drawer = mobileDrawerRef.current;
+    if (!drawer) {
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+
+    const focusableSelector = [
+      'a[href]',
+      'button:not([disabled])',
+      'textarea:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(',');
+
+    const getFocusableElements = () =>
+      Array.from(drawer.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+        (element) => !element.hasAttribute("disabled")
+      );
+
+    const focusableElements = getFocusableElements();
+    focusableElements[0]?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setMenuOpen(false);
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const currentFocusable = getFocusableElements();
+      if (!currentFocusable.length) return;
+
+      const first = currentFocusable[0];
+      const last = currentFocusable[currentFocusable.length - 1];
+      const activeElement = document.activeElement;
+
+      if (event.shiftKey) {
+        if (activeElement === first || !drawer.contains(activeElement)) {
+          event.preventDefault();
+          last.focus();
+        }
+        return;
+      }
+
+      if (activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+
     return () => {
+      document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
 
+
+  const closeMobileMenu = () => {
+    setMenuOpen(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (dropdownCloseTimeoutRef.current) {
+        window.clearTimeout(dropdownCloseTimeoutRef.current);
+      }
+    };
+  }, []);
   const Logo = ({ className }: { className?: string }) => {
     if (logoUrl === null && !siteError) {
       return <SkeletonBlock className={className || "h-9 w-28"} />;
@@ -112,26 +200,82 @@ export default function Header() {
           </Link>
 
           <nav className="nav-links" aria-label={t("Главна навигација")}>
-            {navItems.map((item) => (
-              item.children ? (
-                <div key={item.href} className="nav-dropdown">
-                  <Link href={item.href} className="nav-dropdown-trigger" aria-haspopup="true">
+            {navItems.map((item, index) => {
+              if (!item.children) {
+                return (
+                  <Link key={item.href} href={item.href}>
                     {t(item.label)}
                   </Link>
-                  <div className="nav-dropdown-menu" aria-label={t(`Подмени ${item.label}`)}>
+                );
+              }
+
+              const dropdownId = `${dropdownIdPrefix}-dropdown-${index}`;
+              const isDesktopDropdownOpen = activeDesktopDropdown === item.href;
+
+              const openDropdown = () => {
+                if (dropdownCloseTimeoutRef.current) {
+                  window.clearTimeout(dropdownCloseTimeoutRef.current);
+                  dropdownCloseTimeoutRef.current = null;
+                }
+                setActiveDesktopDropdown(item.href);
+              };
+
+              const closeDropdownWithDelay = () => {
+                if (dropdownCloseTimeoutRef.current) {
+                  window.clearTimeout(dropdownCloseTimeoutRef.current);
+                }
+                dropdownCloseTimeoutRef.current = window.setTimeout(() => {
+                  setActiveDesktopDropdown((current) => (current === item.href ? null : current));
+                }, 120);
+              };
+
+              const toggleDropdown = () => {
+                setActiveDesktopDropdown((current) => (current === item.href ? null : item.href));
+              };
+
+              return (
+                <div
+                  key={item.href}
+                  className="nav-dropdown"
+                  onMouseEnter={openDropdown}
+                  onMouseLeave={closeDropdownWithDelay}
+                >
+                  <button
+                    type="button"
+                    className="nav-dropdown-trigger"
+                    aria-haspopup="menu"
+                    aria-expanded={isDesktopDropdownOpen}
+                    aria-controls={dropdownId}
+                    onClick={toggleDropdown}
+                    onFocus={openDropdown}
+                  >
+                    {t(item.label)}
+                  </button>
+                  <div
+                    id={dropdownId}
+                    className={`nav-dropdown-menu${isDesktopDropdownOpen ? " open" : ""}`}
+                    aria-label={t(`Подмени ${item.label}`)}
+                    role="menu"
+                    onMouseEnter={openDropdown}
+                    onMouseLeave={closeDropdownWithDelay}
+                  >
+                    <Link href={item.href} role="menuitem" onClick={() => setActiveDesktopDropdown(null)}>
+                      {t(item.label)}
+                    </Link>
                     {item.children.map((child) => (
-                      <Link key={child.href} href={child.href}>
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        role="menuitem"
+                        onClick={() => setActiveDesktopDropdown(null)}
+                      >
                         {t(child.label)}
                       </Link>
                     ))}
                   </div>
                 </div>
-              ) : (
-                <Link key={item.href} href={item.href}>
-                  {t(item.label)}
-                </Link>
-              )
-            ))}
+              );
+            })}
           </nav>
 
           <div className="nav-actions">
@@ -166,6 +310,8 @@ export default function Header() {
             className="nav-burger"
             aria-label={t("Отвори мени")}
             aria-expanded={menuOpen}
+            aria-controls="mobilni-meni"
+            ref={burgerButtonRef}
             onClick={() => setMenuOpen((v) => !v)}
           >
             <span />
@@ -180,18 +326,23 @@ export default function Header() {
           type="button"
           className="nav-mobile-overlay"
           aria-label={t("Затвори мени")}
-          onClick={() => setMenuOpen(false)}
+          onClick={closeMobileMenu}
         />
-        <aside className="nav-mobile-drawer" aria-label={t("Мени")}>
+        <aside
+          id="mobilni-meni"
+          className="nav-mobile-drawer"
+          aria-label={t("Мени")}
+          ref={mobileDrawerRef}
+        >
           <div className="nav-mobile-header">
-            <Link href="/" className="nav-mobile-logo" onClick={() => setMenuOpen(false)}>
+            <Link href="/" className="nav-mobile-logo" onClick={closeMobileMenu}>
               <Logo className="h-9 w-auto" />
             </Link>
             <button
               type="button"
               className="nav-mobile-close"
               aria-label={t("Затвори мени")}
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               ✕
             </button>
@@ -200,13 +351,13 @@ export default function Header() {
           <nav className="nav-mobile-links" aria-label={t("Навигација")}>
             {navItems.map((item) => (
               <div key={item.href}>
-                <Link href={item.href} onClick={() => setMenuOpen(false)}>
+                <Link href={item.href} onClick={closeMobileMenu}>
                   {t(item.label)}
                 </Link>
                 {item.children?.length ? (
                   <div className="nav-mobile-submenu">
                     {item.children.map((child) => (
-                      <Link key={child.href} href={child.href} onClick={() => setMenuOpen(false)}>
+                      <Link key={child.href} href={child.href} onClick={closeMobileMenu}>
                         {t(child.label)}
                       </Link>
                     ))}
