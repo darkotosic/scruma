@@ -38,8 +38,8 @@ export default function Hero({
           {normalizedSubtitle ? <p className="heroSubtitle">{t(normalizedSubtitle)}</p> : null}
 
           <div className="heroCtas">
-            {ctas.map((c) => (
-              <Link key={c.href} className="btn btnPrimary" href={c.href}>
+            {ctas.map((c, index) => (
+              <Link key={c.href} className={`btn${index === 0 ? " btnPrimary" : ""}`} href={c.href}>
                 {t(c.title)}
               </Link>
             ))}

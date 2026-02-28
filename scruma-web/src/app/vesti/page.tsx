@@ -8,6 +8,7 @@ import { ApiErrorState } from "@/components/ui/ApiErrorState";
 import { StatusState } from "@/components/ui/StatusState";
 import { fetchPosts } from "@/lib/api";
 import { toPreviewText } from "@/lib/normalizeContent";
+import { formatLocalDate } from "@/lib/dateFormat";
 
 export default function VestiPage() {
   const [posts, setPosts] = useState<any[] | null>(null);
@@ -34,7 +35,7 @@ export default function VestiPage() {
         excerpt: toPreviewText(p.excerpt || p.body || p.body_html || ""),
         href: `/vesti/detalj/?id=${p.id || ""}`,
         image: p.image || undefined,
-        meta: p.published_at ? new Date(p.published_at).toLocaleDateString("sr-RS") : "",
+        meta: p.published_at ? formatLocalDate(p.published_at) : "",
       })),
     [posts]
   );

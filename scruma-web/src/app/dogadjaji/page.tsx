@@ -8,6 +8,7 @@ import { ApiErrorState } from "@/components/ui/ApiErrorState";
 import { StatusState } from "@/components/ui/StatusState";
 import { fetchPosts } from "@/lib/api";
 import { toPreviewText } from "@/lib/normalizeContent";
+import { formatLocalDate } from "@/lib/dateFormat";
 
 export default function DogadjajiPage() {
   const [posts, setPosts] = useState<any[] | null>(null);
@@ -42,7 +43,7 @@ export default function DogadjajiPage() {
               excerpt: toPreviewText(p.excerpt || p.body || p.body_html || ""),
               image: p.image,
               href: `/dogadjaji/detalj/?id=${p.id}`,
-              meta: p.published_at ? new Date(p.published_at).toLocaleDateString("sr-RS") : "",
+              meta: p.published_at ? formatLocalDate(p.published_at) : "",
             }))}
           />
         ) : (
