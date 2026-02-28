@@ -250,6 +250,7 @@ main {
   min-height: 560px;
   overflow: hidden;
   margin-top: calc(-1 * var(--navbar-height));
+  background: var(--bg);
   width: 100%;
   max-width: 100%;
 }
@@ -260,7 +261,8 @@ main {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #000;
+  /* У случају contain режима (или празних зона) — не сме да буде црно, већ да прати тему. */
+  background-color: transparent;
   transform: scale(1.02);
 }
 
@@ -817,6 +819,23 @@ main {
   gap: 12px;
 }
 
+.nav-mobile-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.glass-btn--compact {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+}
+
 .nav-mobile-logo img {
   height: 44px;
   width: auto;
@@ -842,9 +861,13 @@ main {
   flex-direction: column;
   gap: 10px;
   padding-top: 10px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.nav-mobile-links > div {
+.nav-mobile-card {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 6px;
@@ -865,7 +888,41 @@ main {
   background: color-mix(in srgb, var(--surface-2) 70%, transparent);
 }
 
-.nav-mobile-submenu {
+.nav-mobile-section-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 14px;
+  border-radius: var(--radius-md);
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 1.15;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+}
+
+.nav-mobile-section-btn:hover {
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+}
+
+.nav-mobile-section-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-1) 78%, transparent);
+  font-weight: 900;
+}
+
+.nav-mobile-section-panel {
   margin: 0 0 8px 12px;
   border-left: 2px solid var(--border);
   padding-left: 8px;
@@ -874,16 +931,20 @@ main {
   gap: 4px;
 }
 
-.nav-mobile-submenu a {
+.nav-mobile-subitem {
   font-weight: 700;
   font-size: 14px;
   padding: 8px 10px;
+  border-radius: 12px;
 }
 
-/* CTA dugmad u drawer-u (čitljivo u obe teme) */
-.nav-mobile-actions {
-  margin-top: auto;
+.nav-mobile-subitem--parent {
+  font-weight: 900;
+}
+
+.nav-mobile-external {
   display: flex;
+  align-items: center;
   gap: 10px;
 }
 

@@ -6,9 +6,10 @@ import { useScript } from "@/context/ScriptContext";
 type ScriptToggleProps = {
   className?: string;
   id?: string;
+  compact?: boolean;
 };
 
-export default function ScriptToggle({ className, id }: ScriptToggleProps) {
+export default function ScriptToggle({ className, id, compact = false }: ScriptToggleProps) {
   const { script, setScript } = useScript();
 
   useEffect(() => {
@@ -21,8 +22,15 @@ export default function ScriptToggle({ className, id }: ScriptToggleProps) {
   };
 
   return (
-    <button id={id} className={className} onClick={toggle}>
-      {script === "cyrl" ? "Латиница" : "Ћирилица"}
+    <button
+      id={id}
+      className={className}
+      onClick={toggle}
+      type="button"
+      aria-label={compact ? (script === "cyrl" ? "Пређи на латиницу" : "Пређи на ћирилицу") : undefined}
+      title={compact ? (script === "cyrl" ? "Латиница" : "Ћирилица") : undefined}
+    >
+      {compact ? (script === "cyrl" ? "ЛАТ" : "ЋИР") : script === "cyrl" ? "Латиница" : "Ћирилица"}
     </button>
   );
 }

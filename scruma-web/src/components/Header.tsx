@@ -15,6 +15,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDesktopDropdown, setActiveDesktopDropdown] = useState<string | null>(null);
+  const [activeMobileSection, setActiveMobileSection] = useState<string | null>(null);
   const burgerButtonRef = useRef<HTMLButtonElement>(null);
   const mobileDrawerRef = useRef<HTMLElement>(null);
   const dropdownCloseTimeoutRef = useRef<number | null>(null);
@@ -172,6 +173,10 @@ export default function Header() {
 
   const closeMobileMenu = () => {
     setMenuOpen(false);
+  };
+
+  const toggleMobileSection = (href: string) => {
+    setActiveMobileSection((current) => (current === href ? null : href));
   };
 
   useEffect(() => {
@@ -338,6 +343,12 @@ export default function Header() {
             <Link href="/" className="nav-mobile-logo" onClick={closeMobileMenu}>
               <Logo className="h-9 w-auto" />
             </Link>
+
+            <div className="nav-mobile-tools" aria-label={t("Промене приказа")}>
+              <ScriptToggle className="glass-btn glass-btn--compact" id="langToggleMobile" compact />
+              <ThemeToggle className="glass-btn glass-btn--compact" id="themeToggleMobile" compact />
+            </div>
+
             <button
               type="button"
               className="nav-mobile-close"
@@ -349,45 +360,69 @@ export default function Header() {
           </div>
 
           <nav className="nav-mobile-links" aria-label={t("Навигација")}>
-            {navItems.map((item) => (
-              <div key={item.href}>
-                <Link href={item.href} onClick={closeMobileMenu}>
-                  {t(item.label)}
-                </Link>
-                {item.children?.length ? (
-                  <div className="nav-mobile-submenu">
+            {navItems.map((item) => {
+              if (!item.children?.length) {
+                return (
+                  <div key={item.href} className="nav-mobile-card">
+                    <Link href={item.href} onClick={closeMobileMenu}>
+                      {t(item.label)}
+                    </Link>
+                  </div>
+                );
+              }
+
+              const isOpen = activeMobileSection === item.href;
+              const panelId = `mobile-panel-${item.href.replace(/\W+/g, "-")}`;
+
+              return (
+                <div key={item.href} className={`nav-mobile-card nav-mobile-accordion${isOpen ? " open" : ""}`}>
+                  <button
+                    type="button"
+                    className="nav-mobile-section-btn"
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    onClick={() => toggleMobileSection(item.href)}
+                  >
+                    <span>{t(item.label)}</span>
+                    <span className="nav-mobile-section-icon">{isOpen ? "−" : "+"}</span>
+                  </button>
+
+                  <div id={panelId} className="nav-mobile-section-panel" hidden={!isOpen}>
+                    <Link href={item.href} onClick={closeMobileMenu} className="nav-mobile-subitem nav-mobile-subitem--parent">
+                      {t(item.label)}
+                    </Link>
                     {item.children.map((child) => (
-                      <Link key={child.href} href={child.href} onClick={closeMobileMenu}>
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        onClick={closeMobileMenu}
+                        className="nav-mobile-subitem"
+                      >
                         {t(child.label)}
                       </Link>
                     ))}
                   </div>
-                ) : null}
-              </div>
-            ))}
-          </nav>
+                </div>
+              );
+            })}
 
-          <div className="nav-mobile-actions">
-            <ScriptToggle className="glass-btn" id="langToggleMobile" />
-            <ThemeToggle className="glass-btn" id="themeToggleMobile" />
-            <a
-              href={facebookUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="glass-btn"
-              aria-label={t("Фејсбук")}
-            >
-              {facebookIconUrl ? (
-                <img
-                  src={facebookIconUrl}
-                  alt={t("Фејсбук")}
-                  className="social-icon"
-                />
-              ) : (
-                "📘"
-              )}
-            </a>
-          </div>
+            <div className="nav-mobile-card">
+              <a
+                href={facebookUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="nav-mobile-external"
+                aria-label={t("Фејсбук")}
+              >
+                {facebookIconUrl ? (
+                  <img src={facebookIconUrl} alt={t("Фејсбук")} className="social-icon" />
+                ) : (
+                  "📘"
+                )}
+                <span>{t("Фејсбук")}</span>
+              </a>
+            </div>
+          </nav>
         </aside>
       </div>
     </header>
