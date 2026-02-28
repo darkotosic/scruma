@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import ScriptToggle from "./ScriptToggle";
 import { useScript } from "@/context/ScriptContext";
 import ThemeToggle from "./ThemeToggle";
@@ -58,6 +59,18 @@ export default function Header() {
       ],
     },
   ];
+
+  const pathname = usePathname();
+
+  const isPathActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+  const isTopLevelActive = (item: (typeof navItems)[number]) => {
+    if (isPathActive(item.href)) return true;
+    return item.children?.some((child) => isPathActive(child.href)) || false;
+  };
 
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [facebookIconUrl, setFacebookIconUrl] = useState<string | null>(null);
@@ -208,7 +221,12 @@ export default function Header() {
             {navItems.map((item, index) => {
               if (!item.children) {
                 return (
-                  <Link key={item.href} href={item.href}>
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={isPathActive(item.href) ? "nav-link-active" : undefined}
+                    aria-current={isPathActive(item.href) ? "page" : undefined}
+                  >
                     {t(item.label)}
                   </Link>
                 );
@@ -247,7 +265,7 @@ export default function Header() {
                 >
                   <button
                     type="button"
-                    className="nav-dropdown-trigger"
+                    className={`nav-dropdown-trigger${isTopLevelActive(item) ? " nav-link-active" : ""}`}
                     aria-haspopup="menu"
                     aria-expanded={isDesktopDropdownOpen}
                     aria-controls={dropdownId}
@@ -264,7 +282,13 @@ export default function Header() {
                     onMouseEnter={openDropdown}
                     onMouseLeave={closeDropdownWithDelay}
                   >
-                    <Link href={item.href} role="menuitem" onClick={() => setActiveDesktopDropdown(null)}>
+                    <Link
+                      href={item.href}
+                      role="menuitem"
+                      onClick={() => setActiveDesktopDropdown(null)}
+                      className={isPathActive(item.href) ? "nav-link-active" : undefined}
+                      aria-current={isPathActive(item.href) ? "page" : undefined}
+                    >
                       {t(item.label)}
                     </Link>
                     {item.children.map((child) => (
@@ -273,6 +297,8 @@ export default function Header() {
                         href={child.href}
                         role="menuitem"
                         onClick={() => setActiveDesktopDropdown(null)}
+                        className={isPathActive(child.href) ? "nav-link-active" : undefined}
+                        aria-current={isPathActive(child.href) ? "page" : undefined}
                       >
                         {t(child.label)}
                       </Link>
@@ -364,21 +390,26 @@ export default function Header() {
               if (!item.children?.length) {
                 return (
                   <div key={item.href} className="nav-mobile-card">
-                    <Link href={item.href} onClick={closeMobileMenu}>
+                    <Link
+                      href={item.href}
+                      onClick={closeMobileMenu}
+                      className={isPathActive(item.href) ? "nav-link-active" : undefined}
+                      aria-current={isPathActive(item.href) ? "page" : undefined}
+                    >
                       {t(item.label)}
                     </Link>
                   </div>
                 );
               }
 
-              const isOpen = activeMobileSection === item.href;
+              const isOpen = activeMobileSection === item.href || isTopLevelActive(item);
               const panelId = `mobile-panel-${item.href.replace(/\W+/g, "-")}`;
 
               return (
                 <div key={item.href} className={`nav-mobile-card nav-mobile-accordion${isOpen ? " open" : ""}`}>
                   <button
                     type="button"
-                    className="nav-mobile-section-btn"
+                    className={`nav-mobile-section-btn${isTopLevelActive(item) ? " nav-link-active" : ""}`}
                     aria-expanded={isOpen}
                     aria-controls={panelId}
                     onClick={() => toggleMobileSection(item.href)}
@@ -388,7 +419,8 @@ export default function Header() {
                   </button>
 
                   <div id={panelId} className="nav-mobile-section-panel" hidden={!isOpen}>
-                    <Link href={item.href} onClick={closeMobileMenu} className="nav-mobile-subitem nav-mobile-subitem--parent">
+                    <Link href={item.href} onClick={closeMobileMenu} className={`nav-mobile-subitem nav-mobile-subitem--parent${isPathActive(item.href) ? " nav-link-active" : ""}`}
+                      aria-current={isPathActive(item.href) ? "page" : undefined}>
                       {t(item.label)}
                     </Link>
                     {item.children.map((child) => (
@@ -396,7 +428,8 @@ export default function Header() {
                         key={child.href}
                         href={child.href}
                         onClick={closeMobileMenu}
-                        className="nav-mobile-subitem"
+                        className={`nav-mobile-subitem${isPathActive(child.href) ? " nav-link-active" : ""}`}
+                        aria-current={isPathActive(child.href) ? "page" : undefined}
                       >
                         {t(child.label)}
                       </Link>

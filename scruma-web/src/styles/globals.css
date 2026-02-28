@@ -226,6 +226,17 @@ main {
   border-color: color-mix(in srgb, var(--accent) 70%, #000);
 }
 
+.heroCtas .btn:not(.btnPrimary) {
+  background: color-mix(in srgb, var(--surface-1) 20%, transparent);
+  border-color: color-mix(in srgb, white 55%, transparent);
+  color: #fff;
+  box-shadow: none;
+}
+
+.heroCtas .btn:not(.btnPrimary):hover {
+  background: color-mix(in srgb, var(--surface-1) 35%, transparent);
+}
+
 /* Inputs (global baseline) */
 :where(input, textarea, select) {
   background: var(--surface-1);
@@ -612,6 +623,19 @@ main {
   text-shadow: none;
 }
 
+.nav-links .nav-link-active,
+.nav-dropdown-menu .nav-link-active,
+.nav-mobile-links .nav-link-active,
+.nav-mobile-section-btn.nav-link-active {
+  color: var(--accent) !important;
+  text-shadow: none;
+}
+
+.nav-links .nav-link-active {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
 .nav-dropdown {
   position: relative;
   display: inline-flex;
@@ -954,6 +978,15 @@ main {
   color: var(--text);
   text-shadow: none;
   box-shadow: var(--shadow-sm);
+}
+
+.detail-footer-nav {
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 /* =========================================================
