@@ -33,14 +33,16 @@ export default function Hero({
       <div
         className="heroMedia"
         style={{
-          backgroundImage: `url(${(image && image.trim()) ? image : '/images/hero.jpg'})`,
+          backgroundImage: `url(${(image && image.trim()) ? image : '/images/hero.webp'})`,
         }}
       >
         <img
           className="heroMediaImg"
-          src={(image && image.trim()) ? image : '/images/hero.jpg'}
+          src={(image && image.trim()) ? image : '/images/hero.webp'}
           alt="Херо слика"
           loading="eager"
+          width="1920"
+          height="1080"
         />
       </div>
       <div className="heroOverlay" />

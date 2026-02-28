@@ -12,7 +12,7 @@ export default function Footer() {
     <footer className="footer" aria-labelledby="footer-title">
       <div className="footer-inner">
         <div className="footer-brand">
-          <Image src="/logo.svg" alt="Спортски центар Рума" width={120} height={120} />
+          <Image src="/logo.webp" alt="Спортски центар Рума" width={120} height={120} />
           <h3 id="footer-title">{t("СЦ Рума")}</h3>
           <p>{t("Организујемо спортске, рекреативне и јавне програме за све генерације.")}</p>
         </div>
