@@ -989,6 +989,35 @@ main {
   gap: 10px;
 }
 
+
+.cta-bar-wrap {
+  padding: 24px 0 0;
+}
+
+.cta-bar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--border));
+  background: var(--accent);
+  color: #fff;
+  font-weight: 900;
+  font-size: clamp(18px, 2.2vw, 24px);
+  letter-spacing: 0.2px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cta-bar-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
 /* =========================================================
    FOOTER (tematski)
    ========================================================= */
