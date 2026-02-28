@@ -61,6 +61,11 @@ export default function Header() {
 
   const pathname = usePathname();
 
+  const getCurrentMobileSection = () => {
+    const current = navItems.find((item) => item.children?.length && isTopLevelActive(item));
+    return current?.href ?? null;
+  };
+
   const isPathActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(`${href}/`);
@@ -118,6 +123,7 @@ export default function Header() {
       };
     }
 
+    setActiveMobileSection(getCurrentMobileSection());
     wasMenuOpenRef.current = true;
 
     const drawer = mobileDrawerRef.current;
@@ -185,6 +191,7 @@ export default function Header() {
 
   const closeMobileMenu = () => {
     setMenuOpen(false);
+    setActiveMobileSection(null);
   };
 
   const toggleMobileSection = (href: string) => {
@@ -401,7 +408,7 @@ export default function Header() {
                 );
               }
 
-              const isOpen = activeMobileSection === item.href || isTopLevelActive(item);
+              const isOpen = activeMobileSection === item.href;
               const panelId = `mobile-panel-${item.href.replace(/\W+/g, "-")}`;
 
               return (
