@@ -26,8 +26,8 @@ export default function CardGrid({ items }: { items: Item[] }) {
                   src={it.image}
                   alt={t(it.title)}
                   loading="lazy"
-                  width={640}
-                  height={360}
+                  width={1200}
+                  height={675}
                   style={{ aspectRatio: "16 / 9", objectFit: "cover" }}
                 />
               </div>

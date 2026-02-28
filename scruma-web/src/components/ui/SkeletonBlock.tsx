@@ -1,3 +1,11 @@
-export function SkeletonBlock({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded-2xl bg-black/10 dark:bg-white/10 ${className}`} />;
+import type { CSSProperties } from "react";
+
+export function SkeletonBlock({
+  className = "",
+  style,
+}: {
+  className?: string;
+  style?: CSSProperties;
+}) {
+  return <div className={`skeleton ${className}`.trim()} style={style} />;
 }
