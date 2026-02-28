@@ -22,8 +22,7 @@ export default function Footer() {
           <ul>
             <li><Link href="/">{t("Почетна")}</Link></li>
             <li><Link href="/sale">{t("Сале")}</Link></li>
-            <li><Link href="/dogadjaji">{t("Догађаји")}</Link></li>
-            <li><Link href="/vesti">{t("Вести")}</Link></li>
+            <li><Link href="/dogadjaji">{t("Спортске вести")}</Link></li>
             <li><Link href="/kontakt">{t("Контакт")}</Link></li>
           </ul>
         </nav>

@@ -45,8 +45,7 @@ export default function Header() {
       label: "Садржај",
       children: [
         { href: "/obavestenja", label: "Обавештења" },
-        { href: "/vesti", label: "Вести" },
-        { href: "/dogadjaji", label: "Догађаји" },
+        { href: "/dogadjaji", label: "Спортске вести" },
         { href: "/galerija", label: "Галерија" },
       ],
     },
