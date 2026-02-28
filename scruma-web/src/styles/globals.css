@@ -1116,25 +1116,26 @@ main {
     height: 300px;
   }
 
-  /* Мобилни: “fit the screen” без сечења херо слике */
+  /* Мобилни: приказуј САМО херо слику (без текста), без празних зона */
   .hero {
     height: 100svh;
     min-height: 0;
   }
 
+  /* Кључно: COVER уместо CONTAIN да не постоје празни простори изнад/испод */
   .heroMedia {
-    background-size: contain;
+    background-size: cover;
+    background-position: center;
     transform: none;
   }
 
-  /* Да на мобилном текст остане читљив и кад има “letterbox” */
+  /* На мобилном не приказуј overlay ни текст преко слике */
   .heroOverlay {
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.70) 0%,
-      rgba(0, 0, 0, 0.45) 45%,
-      rgba(0, 0, 0, 0.20) 100%
-    );
+    display: none;
+  }
+
+  .heroContent {
+    display: none;
   }
 }
 
