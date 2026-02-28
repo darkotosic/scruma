@@ -20,13 +20,12 @@ export default function HomeClient() {
   async function load() {
     setErr(null);
     try {
-      const [site, notice, news, sport] = await Promise.all([
+      const [site, notice, sport] = await Promise.all([
         fetchSite(),
         fetchPosts({ type: "notice", limit: 6 }),
-        fetchPosts({ type: "news", limit: 6 }),
         fetchPosts({ type: "sport", limit: 6 }),
       ]);
-      setData({ site, notice, news, sport });
+      setData({ site, notice, sport });
     } catch (e: any) {
       const message = typeof e?.message === "string" ? e.message : "Неуспешно учитавање података са API-ја.";
       const status = typeof e?.status === "number" ? `Код: ${e.status}` : "";
@@ -51,7 +50,6 @@ export default function HomeClient() {
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d16836.482932287636!2d19.8200236!3d45.00925155!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x475babf00502b12f%3A0xa91ad9140edc7e6a!2z0KHQv9C-0YDRgtGB0LrQviDQv9C-0YHQu9C-0LLQvdC4INGG0LXQvdGC0LDRgA!5e1!3m2!1sen!2srs!4v1772221925607!5m2!1sen!2srs";
   const mapFallbackUrl = "https://www.google.com/maps/place/Спортско+пословни+центар/@45.0089564,19.8160274,17.25z/data=!4m6!3m5!1s0x475babf00502b12f:0xa91ad9140edc7e6a!8m2!3d45.0087316!4d19.8203575!16s%2Fg%2F11f1vm7wr4?entry=ttu&g_ep=EgoyMDI2MDIxOC4wIKXMDSoASAFQAw%3D%3D";
   const announcements = mapPostsToCards(data.notice?.items || [], (p) => `/obavestenja/detalj/?id=${p.id}`);
-  const news = mapPostsToCards(data.news?.items || [], (p) => `/vesti/detalj/?id=${p.id}`);
   const sports = mapPostsToCards(data.sport?.items || [], (p) => `/dogadjaji/detalj/?id=${p.id}`);
 
   return (
@@ -73,17 +71,6 @@ export default function HomeClient() {
             <CardGrid items={announcements} />
           ) : (
             <StatusState variant="empty" title="Садржај још није унет" details="Обавештења ће бити приказана чим се унесу у админ панел." />
-          )}
-        </Container>
-      </section>
-
-      <section className="pageSection">
-        <Container>
-          <SectionHeader title="Вести" subtitle="Најновија дешавања." />
-          {news.length ? (
-            <CardGrid items={news} />
-          ) : (
-            <StatusState variant="empty" title="Садржај још није унет" details="Вести ће бити приказане чим се унесу у админ панел." />
           )}
         </Container>
       </section>
