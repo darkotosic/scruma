@@ -8,6 +8,8 @@ import { fetchPostById, fetchPosts } from "@/lib/api";
 import { formatLocalDate } from "@/lib/dateFormat";
 import { ApiErrorState } from "@/components/ui/ApiErrorState";
 import { StatusState } from "@/components/ui/StatusState";
+import JsonLd from "@/components/JsonLd";
+import { buildNewsArticleJsonLd } from "@/lib/schema";
 
 export default function ObavestenjaDetaljPage() {
   const sp = useSearchParams();
@@ -48,17 +50,20 @@ export default function ObavestenjaDetaljPage() {
   if (!post) return <StatusState variant="loading" title="Учитавање обавештења" details="Подаци се преузимају са CMS сервиса." />;
 
   return (
-    <article className="prose mx-auto max-w-4xl px-4 py-10 dark:prose-invert">
-      <Breadcrumbs items={[{ label: "Насловна", href: "/" }, { label: "Обавештења", href: "/obavestenja" }, { label: post.title }]} />
-      <h1>{post.title}</h1>
-      <div className="text-sm opacity-70">{formatLocalDate(post.published_at, true)}</div>
-      <div dangerouslySetInnerHTML={{ __html: post.body_html || post.body || "" }} />
-      <DetailFooterNav
-        backHref="/obavestenja"
-        backLabel="Назад на сва обавештења"
-        nextHref={nextPost ? `/obavestenja/detalj/?id=${nextPost.id}` : undefined}
-        nextLabel={nextPost?.title}
-      />
-    </article>
+    <>
+      <JsonLd id="jsonld-notice" data={buildNewsArticleJsonLd(post, "notice")} />
+      <article className="prose mx-auto max-w-4xl px-4 py-10 dark:prose-invert">
+        <Breadcrumbs items={[{ label: "Насловна", href: "/" }, { label: "Обавештења", href: "/obavestenja" }, { label: post.title }]} />
+        <h1>{post.title}</h1>
+        <div className="text-sm opacity-70">{formatLocalDate(post.published_at, true)}</div>
+        <div dangerouslySetInnerHTML={{ __html: post.body_html || post.body || "" }} />
+        <DetailFooterNav
+          backHref="/obavestenja"
+          backLabel="Назад на сва обавештења"
+          nextHref={nextPost ? `/obavestenja/detalj/?id=${nextPost.id}` : undefined}
+          nextLabel={nextPost?.title}
+        />
+      </article>
+    </>
   );
 }
