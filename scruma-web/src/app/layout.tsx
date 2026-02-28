@@ -6,6 +6,7 @@ import SiteFavicon from "@/components/SiteFavicon";
 import ClientProviders from "@/context/ClientProviders";
 import BackToTopButton from "@/components/BackToTopButton";
 import CallToActionBar from "@/components/CallToActionBar";
+import { buildOrgGraph } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "СЦ Рума",
@@ -30,12 +31,21 @@ const THEME_INIT_SCRIPT = `
 })();
 `;
 
+const ORG_JSON_LD = JSON.stringify(buildOrgGraph());
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sr" data-theme="light">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+
+        {/* Enterprise schema.org (Organization + SportsActivityLocation + WebSite) */}
+        <script
+          id="schema-org-graph"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: ORG_JSON_LD }}
+        />
       </head>
       <body>
         <ClientProviders>
