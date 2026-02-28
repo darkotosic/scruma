@@ -1,4 +1,8 @@
+from __future__ import annotations
+
 from django.db import models
+
+from .utils.images import ImageOptimizeSpec, optimize_image_field
 
 
 class Announcement(models.Model):
@@ -29,6 +33,7 @@ class SiteSettings(models.Model):
     hero_title = models.CharField("Херо наслов", max_length=160, default="Спортски центар Рума")
     hero_subtitle = models.TextField("Херо поднаслов", blank=True, default="")
     hero_image = models.ImageField("Херо слика", upload_to="site/", blank=True, null=True)
+
     address = models.CharField(
         "Адреса",
         max_length=200,
@@ -52,11 +57,20 @@ class SiteSettings(models.Model):
         verbose_name = "Подешавања сајта"
         verbose_name_plural = "Подешавања сајта"
 
+    def save(self, *args, **kwargs):
+        # Оптимизација слика (PageSpeed: велики payload-и).
+        # Лого/фавикон су најкритичнији јер се приказују као мале иконице.
+        optimize_image_field(self, "logo", ImageOptimizeSpec(max_px=512, webp_quality=82))
+        optimize_image_field(self, "favicon", ImageOptimizeSpec(max_px=256, webp_quality=82))
+        optimize_image_field(self, "social_facebook_icon", ImageOptimizeSpec(max_px=256, webp_quality=82))
+        optimize_image_field(self, "hero_image", ImageOptimizeSpec(max_px=2400, webp_quality=82))
+        optimize_image_field(self, "footer_logo", ImageOptimizeSpec(max_px=512, webp_quality=82))
+        super().save(*args, **kwargs)
+
     def __str__(self) -> str:
         return "Подешавања сајта"
 
 
-# ✅ Нови модели испод SiteSettings
 class FooterColumn(models.Model):
     site_settings = models.ForeignKey(
         SiteSettings,
@@ -84,7 +98,7 @@ class FooterLink(models.Model):
         verbose_name="Колона",
     )
     label = models.CharField("Текст", max_length=80)
-    url = models.URLField("Линк", max_length=300)
+    url = models.URLField("Линк")
     order = models.PositiveIntegerField("Редослед", default=0)
 
     class Meta:
@@ -129,6 +143,10 @@ class Post(models.Model):
         verbose_name_plural = "Објаве"
         ordering = ["-published_at"]
 
+    def save(self, *args, **kwargs):
+        optimize_image_field(self, "image", ImageOptimizeSpec(max_px=1600, webp_quality=82))
+        super().save(*args, **kwargs)
+
     def __str__(self) -> str:
         return f"{self.get_type_display()}: {self.title}"
 
@@ -152,7 +170,11 @@ class Page(models.Model):
     class Meta:
         verbose_name = "Страница"
         verbose_name_plural = "Странице"
-        ordering = ["nav_order", "id"]
+        ordering = ["nav_order", "title"]
+
+    def save(self, *args, **kwargs):
+        optimize_image_field(self, "hero_image", ImageOptimizeSpec(max_px=2400, webp_quality=82))
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.slug

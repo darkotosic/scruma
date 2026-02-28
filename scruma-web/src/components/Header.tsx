@@ -212,7 +212,16 @@ export default function Header() {
     if (!logoUrl) {
       return <div className={className || "h-9 w-28"} />;
     }
-    return <img src={logoUrl} alt={t("Спортски центар Рума")} className={className} />;
+    return (
+      <img
+        src={logoUrl}
+        alt={t("Спортски центар Рума")}
+        className={className}
+        width={77}
+        height={77}
+        decoding="async"
+      />
+    );
   };
 
   return (

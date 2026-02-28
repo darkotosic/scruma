@@ -22,7 +22,14 @@ export default function CardGrid({ items }: { items: Item[] }) {
             {it.image ? (
               <div className="cardMedia">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={it.image} alt={t(it.title)} loading="lazy" />
+                <img
+                  src={it.image}
+                  alt={t(it.title)}
+                  loading="lazy"
+                  width={640}
+                  height={360}
+                  style={{ aspectRatio: "16 / 9", objectFit: "cover" }}
+                />
               </div>
             ) : null}
 
