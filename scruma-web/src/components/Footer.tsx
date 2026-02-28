@@ -45,7 +45,7 @@ export default function Footer() {
               className="footer-facebook"
               aria-label={t("Фејсбук")}
             >
-              📘 {t("Фејсбук")}
+               {t("Фејсбук")}
             </a>
           </p>
         </div>
